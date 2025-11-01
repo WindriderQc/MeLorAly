@@ -1,103 +1,186 @@
-<div class="row">
-    <div class="col-md-8">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold">
-                <i class="bi bi-people-fill me-2"></i>Gestion des familles
-            </h2>
-            <a href="/family/create" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-2"></i>Créer une famille
-            </a>
+<!-- Family Management -->
+<div class="min-h-screen bg-background-light pb-24">
+    <!-- Header -->
+    <div class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-black text-gray-900 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary filled">group</span>
+                    Mes familles
+                </h1>
+                <a href="/family/create" class="bg-primary text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transition">
+                    <span class="material-symbols-outlined text-sm align-middle">add</span>
+                    Créer une famille
+                </a>
+            </div>
         </div>
+    </div>
 
-        <!-- Families List -->
+    <div class="max-w-7xl mx-auto px-6 py-6">
         <% if (families.length === 0) { %>
-            <div class="card text-center py-5">
-                <div class="card-body">
-                    <i class="bi bi-house-heart text-muted" style="font-size: 5rem;"></i>
-                    <h3 class="mt-4 mb-3">Aucune famille configurée</h3>
-                    <p class="text-muted mb-4">
-                        Commencez par créer votre première famille pour inviter vos proches 
-                        et commencer à partager des moments précieux ensemble.
-                    </p>
-                    <a href="/family/create" class="btn btn-primary btn-lg">
-                        <i class="bi bi-plus-circle me-2"></i>Créer ma première famille
-                    </a>
+            <!-- Empty State -->
+            <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+                <div class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="material-symbols-outlined text-primary text-5xl">home_work</span>
                 </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-3">Aucune famille configurée</h2>
+                <p class="text-gray-600 max-w-md mx-auto mb-6">
+                    Commencez par créer votre première famille pour inviter vos proches 
+                    et commencer à partager des moments précieux ensemble.
+                </p>
+                <a href="/family/create" class="inline-block bg-primary text-white px-8 py-4 rounded-full font-bold hover:shadow-xl transition transform hover:scale-105">
+                    <span class="material-symbols-outlined text-sm align-middle">add</span>
+                    Créer ma première famille
+                </a>
             </div>
         <% } else { %>
-            <div class="row g-4">
-                <% families.forEach(familyMember => { %>
-                    <div class="col-md-6">
-                        <div class="card family-card h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start mb-3">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Families List -->
+                <div class="lg:col-span-2">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <% families.forEach(familyMember => { %>
+                            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition">
+                                <!-- Header -->
+                                <div class="flex items-start gap-4 mb-4">
                                     <% if (familyMember.families.avatar_url) { %>
                                         <img src="<%= familyMember.families.avatar_url %>" 
-                                             alt="Avatar <%= familyMember.families.name %>" 
-                                             class="rounded-circle me-3" 
-                                             width="60" height="60">
+                                             alt="<%= familyMember.families.name %>" 
+                                             class="w-16 h-16 rounded-2xl object-cover">
                                     <% } else { %>
-                                        <div class="avatar-placeholder rounded-circle me-3 d-flex align-items-center justify-content-center" 
-                                             style="width: 60px; height: 60px;">
-                                            <i class="bi bi-people-fill" style="font-size: 1.5rem;"></i>
+                                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-pink-400 rounded-2xl flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-white text-2xl filled">group</span>
                                         </div>
                                     <% } %>
                                     
-                                    <div class="flex-grow-1">
-                                        <h5 class="card-title mb-1"><%= familyMember.families.name %></h5>
-                                        <div class="mb-2">
-                                            <% if (familyMember.role === 'admin') { %>
-                                                <span class="badge bg-primary">
-                                                    <i class="bi bi-star-fill me-1"></i>Administrateur
-                                                </span>
-                                            <% } else if (familyMember.role === 'grandparent') { %>
-                                                <span class="badge bg-info">
-                                                    <i class="bi bi-heart-fill me-1"></i>Grand-parent
-                                                </span>
-                                            <% } else { %>
-                                                <span class="badge bg-secondary">
-                                                    <i class="bi bi-person-fill me-1"></i>Membre
-                                                </span>
-                                            <% } %>
-                                        </div>
-                                        <small class="text-muted">
-                                            <i class="bi bi-calendar me-1"></i>
+                                    <div class="flex-grow">
+                                        <h3 class="font-bold text-gray-900 text-lg mb-1"><%= familyMember.families.name %></h3>
+                                        
+                                        <!-- Role Badge -->
+                                        <% if (familyMember.role === 'admin') { %>
+                                            <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
+                                                <span class="material-symbols-outlined text-xs">star</span>
+                                                Administrateur
+                                            </span>
+                                        <% } else if (familyMember.role === 'grandparent') { %>
+                                            <span class="inline-flex items-center gap-1 bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold">
+                                                <span class="material-symbols-outlined text-xs">favorite</span>
+                                                Grand-parent
+                                            </span>
+                                        <% } else { %>
+                                            <span class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">
+                                                <span class="material-symbols-outlined text-xs">person</span>
+                                                Membre
+                                            </span>
+                                        <% } %>
+                                        
+                                        <p class="text-xs text-gray-500 mt-2">
                                             Rejoint le <%= new Date(familyMember.joined_at).toLocaleDateString('fr-FR') %>
-                                        </small>
+                                        </p>
                                     </div>
                                 </div>
                                 
-                                <div class="d-flex gap-2">
-                                    <a href="/family/<%= familyMember.families.id %>" class="btn btn-outline-primary btn-sm flex-fill">
-                                        <i class="bi bi-eye me-1"></i>Voir
+                                <!-- Actions -->
+                                <div class="flex gap-2">
+                                    <a href="/family/<%= familyMember.families.id %>" 
+                                       class="flex-1 bg-primary/10 text-primary px-4 py-2 rounded-xl text-sm font-bold text-center hover:bg-primary/20 transition">
+                                        Voir
                                     </a>
-                                    <a href="/messages?family=<%= familyMember.families.id %>" class="btn btn-outline-secondary btn-sm flex-fill">
-                                        <i class="bi bi-chat-dots me-1"></i>Messages
+                                    <a href="/messages?family=<%= familyMember.families.id %>" 
+                                       class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-bold text-center hover:bg-gray-200 transition">
+                                        Messages
                                     </a>
                                     <% if (familyMember.role === 'admin') { %>
-                                        <a href="/family/<%= familyMember.families.id %>/manage" class="btn btn-outline-warning btn-sm">
-                                            <i class="bi bi-gear"></i>
+                                        <a href="/family/<%= familyMember.families.id %>/manage" 
+                                           class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center hover:bg-orange-200 transition">
+                                            <span class="material-symbols-outlined text-sm">settings</span>
                                         </a>
                                     <% } %>
                                 </div>
                             </div>
+                        <% }); %>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Statistics -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6">
+                        <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-blue-600">bar_chart</span>
+                            Statistiques
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Total familles</span>
+                                <span class="text-2xl font-bold text-gray-900"><%= families.length %></span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Rôle admin</span>
+                                <span class="text-2xl font-bold text-primary">
+                                    <%= families.filter(f => f.role === 'admin').length %>
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">En tant que membre</span>
+                                <span class="text-2xl font-bold text-gray-600">
+                                    <%= families.filter(f => f.role !== 'admin').length %>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                <% }); %>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-gradient-to-br from-primary/10 to-pink-50 rounded-2xl p-6">
+                        <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">bolt</span>
+                            Actions rapides
+                        </h3>
+                        
+                        <div class="space-y-3">
+                            <a href="/family/create" class="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-md transition group">
+                                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition">
+                                    <span class="material-symbols-outlined text-primary">add</span>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-gray-900">Nouvelle famille</div>
+                                    <div class="text-xs text-gray-500">Créer un espace</div>
+                                </div>
+                            </a>
+                            
+                            <a href="/family/invite" class="flex items-center gap-3 p-3 bg-white rounded-xl hover:shadow-md transition group">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition">
+                                    <span class="material-symbols-outlined text-blue-600">person_add</span>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-gray-900">Inviter</div>
+                                    <div class="text-xs text-gray-500">Ajouter des membres</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Tips -->
+                    <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined text-white filled">lightbulb</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">Astuce</h3>
+                                <p class="text-sm text-gray-600">
+                                    Invitez les grands-parents pour qu'ils suivent les progrès de leurs petits-enfants!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <% } %>
     </div>
-
-    <!-- Sidebar -->
-    <div class="col-md-4">
-        <!-- Family Statistics -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="bi bi-graph-up me-2"></i>Statistiques
-                </h6>
-            </div>
-            <div class="card-body">
+</div>
                 <div class="row text-center">
                     <div class="col-6">
                         <div class="border-end">

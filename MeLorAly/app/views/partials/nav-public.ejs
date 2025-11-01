@@ -1,16 +1,20 @@
-<!-- Public Navigation - Minimal -->
-<header class="sticky top-0 z-10 bg-background-light/80 backdrop-blur-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2 text-primary font-bold text-xl">
-            <span class="material-symbols-outlined text-2xl filled">favorite</span>
+<!-- Public Navigation - Clean & Modern -->
+<header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2 text-gray-900 font-bold text-xl hover:opacity-80 transition">
+            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-xl filled">favorite</span>
+            </div>
             <span>MeLorAly</span>
         </a>
         
-        <div class="flex items-center gap-3">
-            <a href="/auth/login" class="text-gray-700 hover:text-primary font-medium transition">
+        <!-- Auth Buttons -->
+        <div class="flex items-center gap-4">
+                        <a href="/auth/login" class="text-gray-700 hover:text-primary transition font-medium">
                 Connexion
             </a>
-            <a href="/auth/register" class="bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-opacity-90 transition shadow-md">
+            <a href="/auth/signup" class="bg-primary text-gray-900 px-6 py-3 rounded-full font-bold hover:shadow-lg transition shadow-md">
                 S'inscrire
             </a>
         </div>

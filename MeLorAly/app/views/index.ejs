@@ -1,24 +1,143 @@
-<!-- Landing Page - Hero Section -->
-<div class="relative h-screen w-full flex flex-col">
-    <div class="absolute inset-0 bg-center bg-cover" style='background-image: url("/design-reference/screen.accueil1png.png");'>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60"></div>
+<!-- Landing Page -->
+<div class="min-h-screen bg-gray-100">
+    <!-- Hero Section with Cards -->
+    <div class="relative bg-gray-100 px-6 py-12">
+        <!-- Main Heading -->
+        <div class="max-w-6xl mx-auto mb-12">
+            <h1 class="text-5xl md:text-6xl font-black text-gray-900 mb-8">
+                Accompagnement
+            </h1>
+
+            <!-- Cards Grid -->
+            <div class="grid md:grid-cols-2 gap-6 mb-12">
+                <!-- Card 1 - Pre-scolaire -->
+                <div>
+                    <div class="rounded-3xl overflow-hidden aspect-square">
+                        <img src="/images/pre-scolaire-card.png" alt="Pré-scolaire" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('bg-[#c9b7a0]','flex','items-center','justify-center'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div class="text-center" style="display: none;">
+                            <span class="material-symbols-outlined text-white" style="font-size: 120px;">draw</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 text-center mt-4">Pré-scolaire</h3>
+                </div>
+
+                <!-- Card 2 - Scolaire -->
+                <div>
+                    <div class="rounded-3xl overflow-hidden aspect-square">
+                        <img src="/images/scolaire-card.png" alt="Scolaire" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('bg-[#c9b7a0]','flex','items-center','justify-center'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div class="text-center" style="display: none;">
+                            <span class="material-symbols-outlined text-white" style="font-size: 120px;">backpack</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 text-center mt-4">Scolaire</h3>
+                </div>
+            </div>
+
+            <!-- Centered Content -->
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">
+                    Accompagner votre<br>famille dans l'éducation
+                </h2>
+                
+                <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+                    MeLorAly vous aide à soutenir l'éducation et le bien-être de vos enfants, 
+                    de la petite enfance à l'adolescence, avec toute votre famille.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                    <a href="/auth/signup" 
+                       class="bg-white text-gray-900 px-10 py-4 rounded-full text-lg font-bold hover:shadow-lg transition">
+                        Commencer gratuitement
+                    </a>
+                    <a href="#features" 
+                       class="border-2 border-gray-300 text-gray-700 px-10 py-4 rounded-full text-lg font-bold hover:border-gray-400 transition">
+                        En savoir plus
+                    </a>
+                </div>
+            </div>
+
+            <!-- Bottom Cards Grid -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Card 3 - Parental -->
+                <div>
+                    <div class="rounded-3xl overflow-hidden aspect-square">
+                        <img src="/images/parental-card.png" alt="Parental" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('bg-[#c9b7a0]','flex','items-center','justify-center'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div class="text-center" style="display: none;">
+                            <span class="material-symbols-outlined text-white" style="font-size: 120px;">family_restroom</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 text-center mt-4">Parental</h3>
+                </div>
+
+                <!-- Card 4 - Grands-parents -->
+                <div>
+                    <div class="rounded-3xl overflow-hidden aspect-square">
+                        <img src="/images/grands-parents-card.png" alt="Grands-parents" class="w-full h-full object-cover" onerror="this.parentElement.classList.add('bg-[#c9b7a0]','flex','items-center','justify-center'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div class="text-center" style="display: none;">
+                            <span class="material-symbols-outlined text-white" style="font-size: 120px;">elderly</span>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 text-center mt-4">Grands-parents</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Espace Famille Section -->
+        <div class="max-w-6xl mx-auto mt-20">
+            <h2 class="text-5xl font-black text-gray-900 mb-8">Espace Famille</h2>
+        </div>
     </div>
-    
-    <div class="relative z-10 flex-grow flex flex-col items-center justify-center text-center px-6 text-white">
-        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
-            Accompagner votre<br>famille dans l'éducation
-        </h1>
-        <p class="text-lg md:text-xl text-white/90 max-w-2xl mb-8">
-            MeLorAly vous aide à soutenir l'éducation et le bien-être de vos enfants, 
-            de la petite enfance à l'adolescence, avec toute votre famille.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4">
-            <a href="/auth/register" class="bg-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-opacity-90 transition shadow-xl">
-                Commencer gratuitement
-            </a>
-            <a href="#features" class="bg-white/20 backdrop-blur-sm text-white border-2 border-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/30 transition">
-                En savoir plus
-            </a>
+
+    <!-- Orange Gradient Hero Section -->
+    <div class="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary via-orange-500 to-pink-500">
+        <!-- Content -->
+        <div class="relative z-10 text-center px-6 py-12">
+            <!-- Logo Icon -->
+            <div class="mb-8">
+                <span class="material-symbols-outlined text-white" style="font-size: 100px; font-variation-settings: 'FILL' 1;">
+                    favorite
+                </span>
+            </div>
+
+            <!-- Heading -->
+            <h2 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                Accompagner votre<br>famille dans l'éducation
+            </h2>
+
+            <!-- Subtitle -->
+            <p class="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed">
+                MeLorAly vous aide à soutenir l'éducation et le bien-être de vos enfants, 
+                de la petite enfance à l'adolescence, avec toute votre famille.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                <a href="/auth/signup" 
+                   class="bg-white text-primary px-10 py-4 rounded-full text-lg font-black hover:shadow-2xl transition transform hover:scale-105">
+                    Commencer gratuitement
+                </a>
+                <a href="#features" 
+                   class="border-2 border-white text-white px-10 py-4 rounded-full text-lg font-black hover:bg-white/10 transition">
+                    En savoir plus
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+                <div>
+                    <div class="text-3xl font-black text-white mb-2">100+</div>
+                    <div class="text-white/80 text-sm font-medium">Familles</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-black text-white mb-2">500+</div>
+                    <div class="text-white/80 text-sm font-medium">Enfants</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-black text-white mb-2">4.9★</div>
+                    <div class="text-white/80 text-sm font-medium">Satisfaction</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

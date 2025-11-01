@@ -60,25 +60,27 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Authentication middleware
-const requireAuth = (req, res, next) => {
-  if (!req.session.user) {
-    req.flash('error', 'Vous devez être connecté pour accéder à cette page.');
-    return res.redirect('/auth/login');
-  }
-  next();
-};
+// Import authentication middleware
+const { requireAuth } = require('./middleware/auth');
 
 // Routes
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 const familyRoutes = require('./routes/family');
 const onboardingRoutes = require('./routes/onboarding');
+const messagesRoutes = require('./routes/messages');
+const educationRoutes = require('./routes/education');
+const profileRoutes = require('./routes/profile');
+const supportRoutes = require('./routes/support');
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', requireAuth, dashboardRoutes);
 app.use('/family', requireAuth, familyRoutes);
 app.use('/onboarding', onboardingRoutes);
+app.use('/messages', requireAuth, messagesRoutes);
+app.use('/education', educationRoutes);
+app.use('/profile', profileRoutes);
+app.use('/', supportRoutes);
 
 // Public routes
 app.get('/', (req, res) => {

@@ -1,0 +1,202 @@
+<!-- FAQ Page -->
+<div class="min-h-screen bg-background-light pb-24">
+    <!-- Header -->
+    <div class="bg-gradient-to-br from-blue-500 to-purple-500 text-white px-6 py-12">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl font-black mb-4">Questions fréquentes</h1>
+            <p class="text-xl text-white/90">Trouvez rapidement des réponses à vos questions</p>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 py-8">
+        <!-- Search Box -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 -mt-16 mb-8 relative z-10">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-2xl">search</span>
+                <input type="text" placeholder="Rechercher une question..." 
+                       class="w-full pl-14 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition text-lg">
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="grid md:grid-cols-3 gap-4 mb-8">
+            <button onclick="filterCategory('all')" class="category-btn bg-primary text-white px-6 py-4 rounded-xl font-bold hover:shadow-lg transition">
+                <span class="material-symbols-outlined block mb-1">all_inclusive</span>
+                Toutes
+            </button>
+            <button onclick="filterCategory('account')" class="category-btn bg-white text-gray-700 px-6 py-4 rounded-xl font-bold hover:shadow-lg transition">
+                <span class="material-symbols-outlined block mb-1">person</span>
+                Compte
+            </button>
+            <button onclick="filterCategory('family')" class="category-btn bg-white text-gray-700 px-6 py-4 rounded-xl font-bold hover:shadow-lg transition">
+                <span class="material-symbols-outlined block mb-1">group</span>
+                Famille
+            </button>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="space-y-4">
+            <!-- Question 1 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button onclick="toggleFaq(1)" class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                    <h3 class="font-bold text-gray-900 text-lg pr-4">Comment créer ma première famille?</h3>
+                    <span class="material-symbols-outlined text-primary flex-shrink-0" id="icon-1">expand_more</span>
+                </button>
+                <div id="faq-1" class="hidden px-6 pb-5">
+                    <p class="text-gray-600 leading-relaxed">
+                        Pour créer votre première famille, cliquez sur le bouton "Créer une famille" dans votre tableau de bord. 
+                        Donnez un nom à votre famille et ajoutez une description si vous le souhaitez. Une fois créée, vous pourrez 
+                        inviter d'autres membres et ajouter les profils de vos enfants.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button onclick="toggleFaq(2)" class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                    <h3 class="font-bold text-gray-900 text-lg pr-4">Comment inviter des membres de ma famille?</h3>
+                    <span class="material-symbols-outlined text-primary flex-shrink-0" id="icon-2">expand_more</span>
+                </button>
+                <div id="faq-2" class="hidden px-6 pb-5">
+                    <p class="text-gray-600 leading-relaxed mb-3">
+                        Il existe deux façons d'inviter des membres:
+                    </p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Par email: Envoyez une invitation directement à l'adresse email du membre</li>
+                        <li>Par lien: Copiez le lien d'invitation et partagez-le avec vos proches</li>
+                    </ul>
+                    <p class="text-gray-600 leading-relaxed mt-3">
+                        Les invitations se trouvent dans la section "Gestion de famille" de votre tableau de bord.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button onclick="toggleFaq(3)" class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                    <h3 class="font-bold text-gray-900 text-lg pr-4">Quelle est la différence entre parent et grand-parent?</h3>
+                    <span class="material-symbols-outlined text-primary flex-shrink-0" id="icon-3">expand_more</span>
+                </button>
+                <div id="faq-3" class="hidden px-6 pb-5">
+                    <p class="text-gray-600 leading-relaxed mb-3">
+                        Les rôles ont des accès différents:
+                    </p>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-blue-600">shield</span>
+                                Parents (Admin)
+                            </h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Gestion complète de la famille</li>
+                                <li>• Ajout et modification des profils enfants</li>
+                                <li>• Invitation de nouveaux membres</li>
+                                <li>• Accès à toutes les fonctionnalités</li>
+                            </ul>
+                        </div>
+                        <div class="bg-purple-50 rounded-xl p-4">
+                            <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-purple-600">favorite</span>
+                                Grands-parents
+                            </h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Visualisation des progrès des petits-enfants</li>
+                                <li>• Accès aux photos et souvenirs</li>
+                                <li>• Messagerie avec la famille</li>
+                                <li>• Interface adaptée à leurs besoins</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button onclick="toggleFaq(4)" class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                    <h3 class="font-bold text-gray-900 text-lg pr-4">Comment modifier mon profil?</h3>
+                    <span class="material-symbols-outlined text-primary flex-shrink-0" id="icon-4">expand_more</span>
+                </button>
+                <div id="faq-4" class="hidden px-6 pb-5">
+                    <p class="text-gray-600 leading-relaxed">
+                        Accédez à votre profil en cliquant sur votre avatar dans le menu de navigation, puis sélectionnez "Mon profil". 
+                        Vous pourrez modifier vos informations personnelles, changer votre photo de profil, et gérer vos paramètres de confidentialité.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button onclick="toggleFaq(5)" class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                    <h3 class="font-bold text-gray-900 text-lg pr-4">Les données de ma famille sont-elles sécurisées?</h3>
+                    <span class="material-symbols-outlined text-primary flex-shrink-0" id="icon-5">expand_more</span>
+                </button>
+                <div id="faq-5" class="hidden px-6 pb-5">
+                    <p class="text-gray-600 leading-relaxed mb-3">
+                        Oui, la sécurité de vos données est notre priorité absolue:
+                    </p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Chiffrement de bout en bout</li>
+                        <li>Serveurs sécurisés en Europe</li>
+                        <li>Conformité RGPD</li>
+                        <li>Aucune vente de données à des tiers</li>
+                        <li>Sauvegardes régulières</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button onclick="toggleFaq(6)" class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition">
+                    <h3 class="font-bold text-gray-900 text-lg pr-4">MeLorAly est-il gratuit?</h3>
+                    <span class="material-symbols-outlined text-primary flex-shrink-0" id="icon-6">expand_more</span>
+                </button>
+                <div id="faq-6" class="hidden px-6 pb-5">
+                    <p class="text-gray-600 leading-relaxed mb-3">
+                        MeLorAly propose une version gratuite complète qui permet à toute famille de profiter des fonctionnalités essentielles. 
+                        Des fonctionnalités premium sont également disponibles pour ceux qui souhaitent aller plus loin.
+                    </p>
+                    <div class="bg-primary/10 rounded-xl p-4 mt-3">
+                        <p class="text-sm text-gray-700">
+                            <strong>Version gratuite:</strong> Gestion familiale, messagerie, profils enfants, ressources éducatives de base
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Still Have Questions -->
+        <div class="bg-gradient-to-br from-primary to-pink-400 rounded-2xl p-8 text-white text-center mt-12">
+            <h2 class="text-2xl font-black mb-3">Vous avez encore des questions?</h2>
+            <p class="mb-6 text-white/90">Notre équipe est là pour vous aider</p>
+            <a href="/contact" class="inline-block bg-white text-primary px-8 py-4 rounded-full font-bold hover:shadow-2xl transition transform hover:scale-105">
+                Nous contacter
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFaq(id) {
+    const content = document.getElementById(`faq-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.textContent = 'expand_less';
+    } else {
+        content.classList.add('hidden');
+        icon.textContent = 'expand_more';
+    }
+}
+
+function filterCategory(category) {
+    console.log('Filter by:', category);
+    // Update active button
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-white', 'text-gray-700');
+    });
+    event.target.closest('.category-btn').classList.remove('bg-white', 'text-gray-700');
+    event.target.closest('.category-btn').classList.add('bg-primary', 'text-white');
+}
+</script>
