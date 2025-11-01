@@ -1,0 +1,136 @@
+<!-- Onboarding - Ready (Step 5/5) -->
+<div class="min-h-screen bg-gradient-to-br from-primary to-pink-400 flex flex-col">
+    <!-- Progress Stepper -->
+    <div class="bg-white/10 backdrop-blur-sm shadow-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white text-green-600 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-white rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white text-green-600 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-white rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white text-green-600 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-white rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white text-green-600 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-white rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white text-green-600 rounded-full flex items-center justify-center font-bold text-sm">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                    <span class="text-sm font-medium text-white">Prêt!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="flex-grow flex items-center justify-center px-6 py-12 text-white">
+        <div class="max-w-2xl w-full text-center">
+            <!-- Success Animation -->
+            <div class="mb-8 flex justify-center">
+                <div class="relative">
+                    <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce">
+                        <span class="material-symbols-outlined text-green-600 filled" style="font-size: 5rem;">check_circle</span>
+                    </div>
+                    <!-- Confetti effect -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-6xl animate-ping opacity-50">🎉</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Title -->
+            <h1 class="text-4xl md:text-5xl font-black mb-4">
+                Félicitations! 🎊
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="text-xl mb-8 text-white/90">
+                Votre espace familial est prêt!
+            </p>
+            
+            <!-- Summary Card -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 text-left">
+                <h2 class="text-2xl font-bold mb-6 text-center">Ce que vous pouvez faire maintenant:</h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-white filled">dashboard</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Accéder à votre tableau de bord</h3>
+                            <p class="text-white/80 text-sm">Consultez les activités et ressources pour vos enfants</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-white filled">chat</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Commencer à discuter</h3>
+                            <p class="text-white/80 text-sm">Échangez avec les membres de votre famille</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-white filled">school</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Explorer les ressources</h3>
+                            <p class="text-white/80 text-sm">Découvrez les activités éducatives adaptées</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-white filled">group_add</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Inviter d'autres membres</h3>
+                            <p class="text-white/80 text-sm">Ajoutez plus de membres à votre famille</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA -->
+            <a href="/dashboard" 
+                class="inline-block bg-white text-primary px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl transition transform hover:scale-105">
+                Accéder à mon espace
+            </a>
+            
+            <p class="text-sm text-white/70 mt-6">
+                Vous pourrez toujours personnaliser votre espace plus tard
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+</style>

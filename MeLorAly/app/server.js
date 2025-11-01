@@ -73,10 +73,12 @@ const requireAuth = (req, res, next) => {
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 const familyRoutes = require('./routes/family');
+const onboardingRoutes = require('./routes/onboarding');
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', requireAuth, dashboardRoutes);
 app.use('/family', requireAuth, familyRoutes);
+app.use('/onboarding', onboardingRoutes);
 
 // Public routes
 app.get('/', (req, res) => {

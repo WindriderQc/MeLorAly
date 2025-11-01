@@ -1,116 +1,122 @@
-<!-- Landing Page -->
-<div class="hero-section text-white py-5">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Accompagner votre famille dans l'éducation</h1>
-                <p class="lead mb-4">
-                    MeLorAly vous aide à soutenir l'éducation et le bien-être de vos enfants, 
-                    de la petite enfance à l'adolescence, avec toute votre famille.
-                </p>
-                <div class="d-flex gap-3">
-                    <a href="/auth/register" class="btn btn-light btn-lg">Commencer gratuitement</a>
-                    <a href="#features" class="btn btn-outline-light btn-lg">En savoir plus</a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <i class="bi bi-people-fill" style="font-size: 8rem; opacity: 0.8;"></i>
-                </div>
-            </div>
+<!-- Landing Page - Hero Section -->
+<div class="relative h-screen w-full flex flex-col">
+    <div class="absolute inset-0 bg-center bg-cover" style='background-image: url("/design-reference/screen.accueil1png.png");'>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60"></div>
+    </div>
+    
+    <div class="relative z-10 flex-grow flex flex-col items-center justify-center text-center px-6 text-white">
+        <h1 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+            Accompagner votre<br>famille dans l'éducation
+        </h1>
+        <p class="text-lg md:text-xl text-white/90 max-w-2xl mb-8">
+            MeLorAly vous aide à soutenir l'éducation et le bien-être de vos enfants, 
+            de la petite enfance à l'adolescence, avec toute votre famille.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="/auth/register" class="bg-primary text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-opacity-90 transition shadow-xl">
+                Commencer gratuitement
+            </a>
+            <a href="#features" class="bg-white/20 backdrop-blur-sm text-white border-2 border-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/30 transition">
+                En savoir plus
+            </a>
         </div>
     </div>
 </div>
 
-<section id="features" class="py-5 bg-white">
-    <div class="container py-4">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Fonctionnalités principales</h2>
-            <p class="text-muted">Tout ce dont vous avez besoin pour soutenir l'éducation de vos enfants</p>
+<!-- Features Section -->
+<section id="features" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fonctionnalités principales</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Tout ce dont vous avez besoin pour soutenir l'éducation de vos enfants
+            </p>
         </div>
         
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="mb-3">
-                            <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
-                        </div>
-                        <h5 class="card-title mt-3">Gestion familiale</h5>
-                        <p class="card-text text-muted">Gérez les profils de tous les membres de votre famille et invitez grands-parents et proches.</p>
-                    </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-background-light rounded-2xl p-8 hover:shadow-xl transition">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-primary text-4xl filled">group</span>
                 </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Gestion familiale</h3>
+                <p class="text-gray-600">
+                    Gérez les profils de tous les membres de votre famille et invitez grands-parents et proches.
+                </p>
             </div>
             
-            <div class="col-md-4">
-                <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="mb-3">
-                            <i class="bi bi-book-fill text-success" style="font-size: 3rem;"></i>
-                        </div>
-                        <h5 class="card-title mt-3">Ressources éducatives</h5>
-                        <p class="card-text text-muted">Accédez à des activités adaptées à l'âge et des ressources pour accompagner l'apprentissage.</p>
-                    </div>
+            <div class="bg-background-light rounded-2xl p-8 hover:shadow-xl transition">
+                <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-green-600 text-4xl filled">school</span>
                 </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Ressources éducatives</h3>
+                <p class="text-gray-600">
+                    Accédez à des activités adaptées à l'âge et des ressources pour accompagner l'apprentissage.
+                </p>
             </div>
             
-            <div class="col-md-4">
-                <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="mb-3">
-                            <i class="bi bi-chat-dots-fill text-info" style="font-size: 3rem;"></i>
-                        </div>
-                        <h5 class="card-title mt-3">Communication</h5>
-                        <p class="card-text text-muted">Restez connecté avec votre famille grâce à la messagerie intégrée et les notifications.</p>
-                    </div>
+            <div class="bg-background-light rounded-2xl p-8 hover:shadow-xl transition">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-blue-600 text-4xl filled">chat</span>
                 </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Communication</h3>
+                <p class="text-gray-600">
+                    Restez connecté avec votre famille grâce à la messagerie intégrée et les notifications.
+                </p>
             </div>
         </div>
     </div>
 </section>
 
-<section id="about" class="py-5 bg-light">
-    <div class="container py-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="fw-bold mb-4">Une approche familiale de l'éducation</h2>
-                <p class="mb-4 text-muted">
+<!-- About Section -->
+<section id="about" class="py-16 bg-background-light">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                    Une approche familiale de l'éducation
+                </h2>
+                <p class="text-lg text-gray-700 mb-6">
                     MeLorAly comprend que l'éducation d'un enfant implique toute la famille. 
                     Notre plateforme facilite la collaboration entre parents, grands-parents et 
                     autres membres de la famille pour offrir le meilleur soutien possible.
                 </p>
-                <ul class="list-unstyled">
-                    <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-check-circle-fill text-success me-3 mt-1" style="font-size: 1.25rem;"></i>
-                        <span>Suivi personnalisé par âge</span>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-green-600 mt-1 filled">check_circle</span>
+                        <span class="text-gray-700 text-lg">Suivi personnalisé par âge</span>
                     </li>
-                    <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-check-circle-fill text-success me-3 mt-1" style="font-size: 1.25rem;"></i>
-                        <span>Ressources adaptées</span>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-green-600 mt-1 filled">check_circle</span>
+                        <span class="text-gray-700 text-lg">Ressources adaptées</span>
                     </li>
-                    <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-check-circle-fill text-success me-3 mt-1" style="font-size: 1.25rem;"></i>
-                        <span>Collaboration familiale</span>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-green-600 mt-1 filled">check_circle</span>
+                        <span class="text-gray-700 text-lg">Collaboration familiale</span>
                     </li>
-                    <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-check-circle-fill text-success me-3 mt-1" style="font-size: 1.25rem;"></i>
-                        <span>Interface ludique</span>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-green-600 mt-1 filled">check_circle</span>
+                        <span class="text-gray-700 text-lg">Interface ludique</span>
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <i class="bi bi-heart-fill" style="font-size: 8rem; color: #ec4899; opacity: 0.8;"></i>
+            <div class="flex justify-center">
+                <div class="w-64 h-64 bg-gradient-to-br from-primary to-pink-400 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white filled" style="font-size: 8rem;">favorite</span>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 hero-section text-white">
-    <div class="container text-center py-4">
-        <h2 class="fw-bold mb-4">Prêt à commencer?</h2>
-        <p class="lead mb-4">Rejoignez les familles qui font confiance à MeLorAly pour l'éducation de leurs enfants.</p>
-        <a href="/auth/register" class="btn btn-light btn-lg">Créer un compte gratuit</a>
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-primary to-orange-500">
+    <div class="max-w-4xl mx-auto px-6 text-center text-white">
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">Prêt à commencer?</h2>
+        <p class="text-xl mb-8 opacity-90">
+            Rejoignez les familles qui font confiance à MeLorAly pour l'éducation de leurs enfants.
+        </p>
+        <a href="/auth/register" class="inline-block bg-white text-primary px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition transform hover:scale-105">
+            Créer un compte gratuit
+        </a>
     </div>
 </section>

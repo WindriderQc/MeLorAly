@@ -1,32 +1,18 @@
-<!-- Public Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-primary" href="/">
-            <i class="bi bi-heart-fill me-2"></i>MeLorAly
+<!-- Public Navigation - Minimal -->
+<header class="sticky top-0 z-10 bg-background-light/80 backdrop-blur-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 text-primary font-bold text-xl">
+            <span class="material-symbols-outlined text-2xl filled">favorite</span>
+            <span>MeLorAly</span>
         </a>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/#features">Fonctionnalités</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/#about">À propos</a>
-                </li>
-            </ul>
-            
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/auth/login">Connexion</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-primary ms-2" href="/auth/register">S'inscrire</a>
-                </li>
-            </ul>
+        <div class="flex items-center gap-3">
+            <a href="/auth/login" class="text-gray-700 hover:text-primary font-medium transition">
+                Connexion
+            </a>
+            <a href="/auth/register" class="bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-opacity-90 transition shadow-md">
+                S'inscrire
+            </a>
         </div>
     </div>
-</nav>
+</header>

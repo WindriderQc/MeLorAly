@@ -1,0 +1,157 @@
+<!-- Onboarding - Family Space (Step 4/5) -->
+<div class="min-h-screen bg-background-light flex flex-col">
+    <!-- Progress Stepper -->
+    <div class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 opacity-75">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-green-500 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-75">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-green-500 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-75">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-primary rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm">4</div>
+                    <span class="text-sm font-medium text-gray-900">Espace</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-50">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold text-sm">5</div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Prêt!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="flex-grow px-6 py-12">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="material-symbols-outlined text-white filled" style="font-size: 3rem;">home</span>
+                    </div>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-3">
+                    Créez votre espace famille
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Donnez un nom à votre espace familial
+                </p>
+            </div>
+            
+            <!-- Family Name Form -->
+            <div class="bg-white rounded-2xl shadow-sm p-8 mb-8">
+                <form id="family-form">
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Nom de la famille</label>
+                        <input type="text" id="family-name" required
+                            placeholder="Famille Dupont"
+                            class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition text-lg">
+                        <p class="text-sm text-gray-500 mt-2">Ce nom sera visible par tous les membres</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Photo de famille (optionnel)</label>
+                        <div class="flex items-center gap-4">
+                            <div id="family-photo-preview" class="w-24 h-24 bg-gradient-to-br from-primary to-pink-400 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined text-white filled text-4xl">photo_camera</span>
+                            </div>
+                            <div class="flex-grow">
+                                <input type="file" id="family-photo" accept="image/*" class="hidden">
+                                <button type="button" onclick="document.getElementById('family-photo').click()"
+                                    class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-200 transition">
+                                    Choisir une photo
+                                </button>
+                                <p class="text-sm text-gray-500 mt-2">JPG, PNG ou GIF (max. 5MB)</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Preview Card -->
+            <div class="bg-gradient-to-br from-primary/10 to-pink-50 rounded-2xl p-6 mb-8">
+                <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">visibility</span>
+                    Aperçu
+                </h3>
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div id="preview-photo" class="w-16 h-16 bg-gradient-to-br from-primary to-pink-400 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-white filled text-2xl">favorite</span>
+                        </div>
+                        <div>
+                            <h4 id="preview-name" class="text-xl font-bold text-gray-900">Famille Dupont</h4>
+                            <p class="text-sm text-gray-500">Créée aujourd'hui</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="flex gap-4">
+                <a href="/onboarding/adults" 
+                    class="flex-1 bg-white text-gray-700 border-2 border-gray-200 px-6 py-4 rounded-full font-bold text-center hover:border-primary transition">
+                    Retour
+                </a>
+                <button type="button" onclick="submitFamily()"
+                    class="flex-1 bg-primary text-white px-6 py-4 rounded-full font-bold text-center hover:shadow-xl transition transform hover:scale-105">
+                    Continuer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const familyNameInput = document.getElementById('family-name');
+const familyPhotoInput = document.getElementById('family-photo');
+const previewName = document.getElementById('preview-name');
+
+familyNameInput?.addEventListener('input', (e) => {
+    previewName.textContent = e.target.value || 'Famille Dupont';
+});
+
+familyPhotoInput?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const preview = document.getElementById('family-photo-preview');
+            preview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover rounded-2xl">`;
+            
+            const previewPhoto = document.getElementById('preview-photo');
+            previewPhoto.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover rounded-2xl">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function submitFamily() {
+    const familyName = familyNameInput.value;
+    if (familyName) {
+        // Save to backend here
+        window.location.href = '/onboarding/ready';
+    } else {
+        alert('Veuillez entrer un nom de famille');
+    }
+}
+</script>

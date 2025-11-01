@@ -1,0 +1,183 @@
+<!-- Onboarding - Adults (Step 3/5) -->
+<div class="min-h-screen bg-background-light flex flex-col">
+    <!-- Progress Stepper -->
+    <div class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 opacity-75">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Bienvenue</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-green-500 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-75">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Enfants</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-primary rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                    <span class="text-sm font-medium text-gray-900">Adultes</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-50">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold text-sm">4</div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Espace</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-50">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold text-sm">5</div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Prêt!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="flex-grow px-6 py-12">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="material-symbols-outlined text-white filled" style="font-size: 3rem;">group</span>
+                    </div>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-3">
+                    Invitez la famille
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Invitez parents, grands-parents et proches à rejoindre l'espace familial
+                </p>
+            </div>
+            
+            <!-- Invite Options -->
+            <div class="grid sm:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-2xl shadow-sm p-6 text-center hover:shadow-lg transition cursor-pointer border-2 border-transparent hover:border-primary"
+                     onclick="document.getElementById('invite-email-section').classList.toggle('hidden')">
+                    <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-primary text-3xl filled">mail</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Par email</h3>
+                    <p class="text-sm text-gray-600">Envoyez une invitation par email</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm p-6 text-center hover:shadow-lg transition cursor-pointer border-2 border-transparent hover:border-primary"
+                     onclick="copyInviteLink()">
+                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-blue-600 text-3xl filled">link</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Par lien</h3>
+                    <p class="text-sm text-gray-600">Copiez le lien d'invitation</p>
+                </div>
+            </div>
+            
+            <!-- Email Invite Form (Hidden by default) -->
+            <div id="invite-email-section" class="bg-white rounded-2xl shadow-sm p-6 mb-6 hidden">
+                <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">mail</span>
+                    Inviter par email
+                </h3>
+                <form id="invite-form">
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                        <input type="email" id="invite-email" required
+                            placeholder="exemple@email.com"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Rôle</label>
+                        <select id="invite-role"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                            <option value="parent">Parent</option>
+                            <option value="grandparent">Grand-parent</option>
+                            <option value="family">Membre de la famille</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" 
+                        class="w-full bg-primary text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">send</span>
+                        Envoyer l'invitation
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Invited Members List -->
+            <div id="invited-list" class="space-y-3 mb-6">
+                <!-- Invited members will appear here -->
+            </div>
+            
+            <!-- Navigation -->
+            <div class="flex gap-4">
+                <a href="/onboarding/children" 
+                    class="flex-1 bg-white text-gray-700 border-2 border-gray-200 px-6 py-4 rounded-full font-bold text-center hover:border-primary transition">
+                    Retour
+                </a>
+                <a href="/onboarding/family-space"
+                    class="flex-1 bg-primary text-white px-6 py-4 rounded-full font-bold text-center hover:shadow-xl transition transform hover:scale-105">
+                    Continuer
+                </a>
+            </div>
+            
+            <p class="text-center text-sm text-gray-500 mt-4">
+                Vous pourrez inviter d'autres membres plus tard
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+const inviteForm = document.getElementById('invite-form');
+const invitedList = document.getElementById('invited-list');
+let invited = [];
+
+inviteForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const member = {
+        email: document.getElementById('invite-email').value,
+        role: document.getElementById('invite-role').value
+    };
+    
+    invited.push(member);
+    renderInvited();
+    inviteForm.reset();
+    document.getElementById('invite-email-section').classList.add('hidden');
+});
+
+function renderInvited() {
+    const roleLabels = {
+        parent: 'Parent',
+        grandparent: 'Grand-parent',
+        family: 'Famille'
+    };
+    
+    invitedList.innerHTML = invited.map((member, index) => `
+        <div class="bg-white rounded-xl shadow-sm p-4 flex items-center gap-4">
+            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-purple-600">person</span>
+            </div>
+            <div class="flex-grow">
+                <h4 class="font-bold text-gray-900 text-sm">${member.email}</h4>
+                <p class="text-xs text-gray-500">${roleLabels[member.role]}</p>
+            </div>
+            <span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-medium">En attente</span>
+        </div>
+    `).join('');
+}
+
+function copyInviteLink() {
+    const link = window.location.origin + '/invite/ABC123';
+    navigator.clipboard.writeText(link);
+    alert('Lien d\'invitation copié!');
+}
+</script>

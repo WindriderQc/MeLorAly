@@ -1,0 +1,154 @@
+<!-- Onboarding - Children (Step 2/5) -->
+<div class="min-h-screen bg-background-light flex flex-col">
+    <!-- Progress Stepper -->
+    <div class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 opacity-75">
+                    <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm filled">check</span>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Bienvenue</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-primary rounded"></div>
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                    <span class="text-sm font-medium text-gray-900">Enfants</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-50">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Adultes</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-50">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold text-sm">4</div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Espace</span>
+                </div>
+                <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                
+                <div class="flex items-center gap-2 opacity-50">
+                    <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold text-sm">5</div>
+                    <span class="text-sm font-medium text-gray-500 hidden sm:inline">Prêt!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="flex-grow px-6 py-12">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="material-symbols-outlined text-white filled" style="font-size: 3rem;">child_care</span>
+                    </div>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-3">
+                    Ajoutons vos enfants
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Commencez par ajouter les enfants de votre famille
+                </p>
+            </div>
+            
+            <!-- Children List -->
+            <div id="children-list" class="space-y-4 mb-6">
+                <!-- Child items will be added here dynamically -->
+            </div>
+            
+            <!-- Add Child Form -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+                <form id="add-child-form">
+                    <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Prénom</label>
+                            <input type="text" id="child-first-name" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Nom</label>
+                            <input type="text" id="child-last-name" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Date de naissance</label>
+                        <input type="date" id="child-birthdate" required
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                    </div>
+                    
+                    <button type="submit" 
+                        class="w-full bg-primary/10 text-primary border-2 border-primary border-dashed px-6 py-3 rounded-xl font-bold hover:bg-primary/20 transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">add</span>
+                        Ajouter cet enfant
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="flex gap-4">
+                <a href="/onboarding/welcome" 
+                    class="flex-1 bg-white text-gray-700 border-2 border-gray-200 px-6 py-4 rounded-full font-bold text-center hover:border-primary transition">
+                    Retour
+                </a>
+                <a href="/onboarding/adults" id="next-btn"
+                    class="flex-1 bg-primary text-white px-6 py-4 rounded-full font-bold text-center hover:shadow-xl transition transform hover:scale-105">
+                    Continuer
+                </a>
+            </div>
+            
+            <p class="text-center text-sm text-gray-500 mt-4">
+                Vous pourrez ajouter ou modifier ces informations plus tard
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simple demo functionality - replace with actual backend integration
+const childrenList = document.getElementById('children-list');
+const addChildForm = document.getElementById('add-child-form');
+let children = [];
+
+addChildForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const child = {
+        firstName: document.getElementById('child-first-name').value,
+        lastName: document.getElementById('child-last-name').value,
+        birthdate: document.getElementById('child-birthdate').value
+    };
+    
+    children.push(child);
+    renderChildren();
+    addChildForm.reset();
+});
+
+function renderChildren() {
+    childrenList.innerHTML = children.map((child, index) => `
+        <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-blue-600 filled">child_care</span>
+            </div>
+            <div class="flex-grow">
+                <h3 class="font-bold text-gray-900">${child.firstName} ${child.lastName}</h3>
+                <p class="text-sm text-gray-500">Né(e) le ${new Date(child.birthdate).toLocaleDateString('fr-FR')}</p>
+            </div>
+            <button onclick="removeChild(${index})" class="w-10 h-10 rounded-full hover:bg-red-50 flex items-center justify-center text-red-500 transition">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    `).join('');
+}
+
+function removeChild(index) {
+    children.splice(index, 1);
+    renderChildren();
+}
+</script>
