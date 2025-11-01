@@ -5,6 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const expressLayouts = require('express-ejs-layouts');
 const { createClient } = require('@supabase/supabase-js');
+const csrf = require('csurf');
 const path = require('path');
 
 const app = express();
@@ -35,11 +36,16 @@ app.use(session({
 
 app.use(flash());
 
+// CSRF Protection
+const csrfProtection = csrf({ cookie: false });
+app.use(csrfProtection);
+
 // Global middleware to add user and messages to all views
 app.use(async (req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.messages = req.flash();
   res.locals.currentPath = req.path;
+  res.locals.csrfToken = req.csrfToken();
   
   // If user is logged in, get their profile
   if (req.session.user) {

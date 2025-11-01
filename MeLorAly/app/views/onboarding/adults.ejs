@@ -78,6 +78,9 @@
             
             <!-- Main Form -->
             <form method="POST" action="/onboarding/adults" id="onboarding-form">
+                <!-- CSRF Protection -->
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                
                 <!-- Error Messages -->
                 <% if (locals.messages && locals.messages.error) { %>
                     <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-6">

@@ -72,6 +72,9 @@
             
             <!-- Main Form -->
             <form method="POST" action="/onboarding/children" id="onboarding-form">
+                <!-- CSRF Protection -->
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                
                 <!-- Children List -->
                 <div id="children-list" class="space-y-4 mb-6">
                     <!-- Child items will be added here dynamically -->
