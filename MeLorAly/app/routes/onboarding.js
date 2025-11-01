@@ -10,7 +10,7 @@ const supabase = createClient(
 
 // Middleware to check if user is authenticated
 const requireAuth = (req, res, next) => {
-    if (!req.session.userId) {
+    if (!req.session.user) {
         req.flash('error', 'Veuillez vous connecter pour accéder à cette page');
         return res.redirect('/auth/login');
     }
@@ -194,7 +194,7 @@ router.get('/ready', requireAuth, async (req, res) => {
         }
 
         // Persist data to Supabase
-        const userId = req.session.userId;
+        const userId = req.session.user.id;
         
         // Step 1: Create the family
         const { data: family, error: familyError } = await supabase
