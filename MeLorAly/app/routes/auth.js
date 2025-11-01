@@ -121,9 +121,12 @@ router.post('/register', async (req, res) => {
 router.get('/logout', async (req, res) => {
   try {
     await supabase.auth.signOut();
-    req.session.destroy();
-    req.flash('success', 'Déconnexion réussie.');
-    res.redirect('/');
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destruction error:', err);
+      }
+      res.redirect('/');
+    });
   } catch (error) {
     console.error('Logout error:', error);
     res.redirect('/dashboard');
