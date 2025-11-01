@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { createClient } = require('@supabase/supabase-js');
+const { 
+    childrenValidator, 
+    adultsValidator, 
+    familySpaceValidator, 
+    validationResult 
+} = require('../middleware/validators');
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -36,8 +42,20 @@ router.get('/children', requireAuth, (req, res) => {
 });
 
 // POST handler for children step
-router.post('/children', requireAuth, (req, res) => {
+router.post('/children', childrenValidator, requireAuth, (req, res) => {
     try {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // Return to form with errors
+            return res.render('onboarding/children', {
+                title: 'Vos enfants - MeLorAly',
+                currentPage: 'onboarding',
+                formData: req.body.children || [],
+                errors: errors.array()
+            });
+        }
+
         // Initialize onboarding session if it doesn't exist
         if (!req.session.onboarding) {
             req.session.onboarding = {};
@@ -67,7 +85,7 @@ router.post('/children', requireAuth, (req, res) => {
             });
         }
 
-        // Validation: at least one child required
+        // Validation: at least one child required (redundant with validator but kept for safety)
         if (children.length === 0) {
             req.flash('error', 'Veuillez ajouter au moins un enfant');
             return res.redirect('/onboarding/children');
@@ -96,8 +114,20 @@ router.get('/adults', requireAuth, (req, res) => {
 });
 
 // POST handler for adults step
-router.post('/adults', requireAuth, (req, res) => {
+router.post('/adults', adultsValidator, requireAuth, (req, res) => {
     try {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // Return to form with errors
+            return res.render('onboarding/adults', {
+                title: 'Inviter la famille - MeLorAly',
+                currentPage: 'onboarding',
+                formData: req.body.adults || [],
+                errors: errors.array()
+            });
+        }
+
         // Initialize onboarding session if it doesn't exist
         if (!req.session.onboarding) {
             req.session.onboarding = {};
@@ -150,8 +180,23 @@ router.get('/family-space', requireAuth, (req, res) => {
 });
 
 // POST handler for family-space step
-router.post('/family-space', requireAuth, (req, res) => {
+router.post('/family-space', familySpaceValidator, requireAuth, (req, res) => {
     try {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // Return to form with errors
+            return res.render('onboarding/family-space', {
+                title: 'Espace famille - MeLorAly',
+                currentPage: 'onboarding',
+                formData: {
+                    name: req.body.familyName,
+                    description: req.body.familyDescription
+                },
+                errors: errors.array()
+            });
+        }
+
         // Initialize onboarding session if it doesn't exist
         if (!req.session.onboarding) {
             req.session.onboarding = {};
@@ -161,7 +206,7 @@ router.post('/family-space', requireAuth, (req, res) => {
         const familyName = req.body.familyName?.trim();
         const familyDescription = req.body.familyDescription?.trim() || null;
 
-        // Validation: family name required
+        // Validation: family name required (redundant with validator but kept for safety)
         if (!familyName || familyName.length < 2) {
             req.flash('error', 'Veuillez donner un nom à votre espace famille (minimum 2 caractères)');
             return res.redirect('/onboarding/family-space');
