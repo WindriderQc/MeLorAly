@@ -17,6 +17,11 @@ router.get('/register', (req, res) => {
   res.render('auth/register');
 });
 
+// Signup alias (same as register)
+router.get('/signup', (req, res) => {
+  res.render('auth/register');
+});
+
 // Auth callback handler (for email confirmation)
 router.get('/callback', async (req, res) => {
   const { token_hash, type } = req.query;
