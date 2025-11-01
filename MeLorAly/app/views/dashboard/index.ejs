@@ -115,6 +115,13 @@
                                             class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-bold text-center hover:bg-gray-200 transition">
                                             Messages
                                         </a>
+                                        <% if (familyMember.role === 'admin') { %>
+                                            <a href="/family/<%= familyMember.families.id %>/manage" 
+                                               class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center hover:bg-orange-200 transition"
+                                               title="Gérer la famille">
+                                                <span class="material-symbols-outlined text-sm">settings</span>
+                                            </a>
+                                        <% } %>
                                     </div>
                                 </div>
                             <% }); %>

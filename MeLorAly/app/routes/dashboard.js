@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { createClient } = require('@supabase/supabase-js');
+const { requireAuth } = require('../middleware/auth');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+// All dashboard routes require authentication
+router.use(requireAuth);
 
 // Main dashboard
 router.get('/', async (req, res) => {
   try {
     // Get user's families
-    const { data: familyMembers } = await supabase
+    const { data: familyMembers } = await req.supabase
       .from('family_members')
       .select(`
         *,
@@ -28,7 +26,7 @@ router.get('/', async (req, res) => {
     let children = [];
     if (familyMembers && familyMembers.length > 0) {
       const familyIds = familyMembers.map(fm => fm.family_id);
-      const { data: familyChildren } = await supabase
+      const { data: familyChildren } = await req.supabase
         .from('children')
         .select('*')
         .in('family_id', familyIds);
@@ -37,7 +35,7 @@ router.get('/', async (req, res) => {
     }
 
     // Get recent notifications
-    const { data: notifications } = await supabase
+    const { data: notifications } = await req.supabase
       .from('notifications')
       .select('*')
       .eq('user_id', req.session.user.id)
@@ -70,7 +68,7 @@ router.get('/', async (req, res) => {
 router.get('/grandparent', async (req, res) => {
   try {
     // Get user's families
-    const { data: familyMembers } = await supabase
+    const { data: familyMembers } = await req.supabase
       .from('family_members')
       .select(`
         *,
@@ -87,7 +85,7 @@ router.get('/grandparent', async (req, res) => {
     let children = [];
     if (familyMembers && familyMembers.length > 0) {
       const familyIds = familyMembers.map(fm => fm.family_id);
-      const { data: familyChildren } = await supabase
+      const { data: familyChildren } = await req.supabase
         .from('children')
         .select('*')
         .in('family_id', familyIds);
@@ -96,7 +94,7 @@ router.get('/grandparent', async (req, res) => {
     }
 
     // Get recent notifications
-    const { data: notifications } = await supabase
+    const { data: notifications } = await req.supabase
       .from('notifications')
       .select('*')
       .eq('user_id', req.session.user.id)

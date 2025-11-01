@@ -38,6 +38,123 @@ router.get('/create', (req, res) => {
   res.render('family/create');
 });
 
+// Manage family page (must be before /:id to avoid route conflict)
+router.get('/:id/manage', async (req, res) => {
+  try {
+    const familyId = req.params.id;
+
+    // Get family details
+    const { data: family, error: familyError } = await req.supabase
+      .from('families')
+      .select('*')
+      .eq('id', familyId)
+      .single();
+
+    if (familyError) throw familyError;
+
+    // Check if user is admin
+    const { data: membership } = await req.supabase
+      .from('family_members')
+      .select('role')
+      .eq('family_id', familyId)
+      .eq('user_id', req.session.user.id)
+      .single();
+
+    if (!membership || membership.role !== 'admin') {
+      req.flash('error', 'Vous devez être administrateur pour gérer cette famille.');
+      return res.redirect(`/family/${familyId}`);
+    }
+
+    // Get family members
+    const { data: members } = await req.supabase
+      .from('family_members')
+      .select(`
+        *,
+        profiles:user_id (
+          id,
+          full_name,
+          avatar_url,
+          role
+        )
+      `)
+      .eq('family_id', familyId);
+
+    // Get children
+    const { data: children } = await req.supabase
+      .from('children')
+      .select('*')
+      .eq('family_id', familyId);
+
+    // Get pending invitations
+    const { data: invitations } = await req.supabase
+      .from('invitations')
+      .select('*')
+      .eq('family_id', familyId)
+      .eq('status', 'pending');
+
+    res.render('family/manage', {
+      family,
+      members: members || [],
+      children: children || [],
+      invitations: invitations || []
+    });
+  } catch (error) {
+    console.error('Family manage error:', error);
+    req.flash('error', 'Erreur lors du chargement de la page de gestion.');
+    res.redirect('/family');
+  }
+});
+
+// View single family
+router.get('/:id', async (req, res) => {
+  try {
+    const familyId = req.params.id;
+
+    // Get family details
+    const { data: family, error: familyError } = await req.supabase
+      .from('families')
+      .select('*')
+      .eq('id', familyId)
+      .single();
+
+    if (familyError) throw familyError;
+
+    // Get family members
+    const { data: members, error: membersError } = await req.supabase
+      .from('family_members')
+      .select(`
+        *,
+        profiles:user_id (
+          id,
+          full_name,
+          avatar_url,
+          role
+        )
+      `)
+      .eq('family_id', familyId);
+
+    if (membersError) throw membersError;
+
+    // Get children
+    const { data: children, error: childrenError } = await req.supabase
+      .from('children')
+      .select('*')
+      .eq('family_id', familyId);
+
+    if (childrenError) throw childrenError;
+
+    res.render('family/view', {
+      family,
+      members: members || [],
+      children: children || []
+    });
+  } catch (error) {
+    console.error('Family view error:', error);
+    req.flash('error', 'Famille introuvable.');
+    res.redirect('/family');
+  }
+});
+
 // Handle family creation
 router.post('/create', async (req, res) => {
   const { family_name } = req.body;

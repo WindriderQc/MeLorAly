@@ -74,7 +74,7 @@ const profileRoutes = require('./routes/profile');
 const supportRoutes = require('./routes/support');
 
 app.use('/auth', authRoutes);
-app.use('/dashboard', requireAuth, dashboardRoutes);
+app.use('/dashboard', dashboardRoutes);
 app.use('/family', familyRoutes);
 app.use('/onboarding', onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
