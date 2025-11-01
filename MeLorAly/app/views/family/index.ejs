@@ -1,0 +1,161 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">
+                <i class="bi bi-people-fill me-2"></i>Gestion des familles
+            </h2>
+            <a href="/family/create" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Créer une famille
+            </a>
+        </div>
+
+        <!-- Families List -->
+        <% if (families.length === 0) { %>
+            <div class="card text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-house-heart text-muted" style="font-size: 5rem;"></i>
+                    <h3 class="mt-4 mb-3">Aucune famille configurée</h3>
+                    <p class="text-muted mb-4">
+                        Commencez par créer votre première famille pour inviter vos proches 
+                        et commencer à partager des moments précieux ensemble.
+                    </p>
+                    <a href="/family/create" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle me-2"></i>Créer ma première famille
+                    </a>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="row g-4">
+                <% families.forEach(familyMember => { %>
+                    <div class="col-md-6">
+                        <div class="card family-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start mb-3">
+                                    <% if (familyMember.families.avatar_url) { %>
+                                        <img src="<%= familyMember.families.avatar_url %>" 
+                                             alt="Avatar <%= familyMember.families.name %>" 
+                                             class="rounded-circle me-3" 
+                                             width="60" height="60">
+                                    <% } else { %>
+                                        <div class="avatar-placeholder rounded-circle me-3 d-flex align-items-center justify-content-center" 
+                                             style="width: 60px; height: 60px;">
+                                            <i class="bi bi-people-fill" style="font-size: 1.5rem;"></i>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <div class="flex-grow-1">
+                                        <h5 class="card-title mb-1"><%= familyMember.families.name %></h5>
+                                        <div class="mb-2">
+                                            <% if (familyMember.role === 'admin') { %>
+                                                <span class="badge bg-primary">
+                                                    <i class="bi bi-star-fill me-1"></i>Administrateur
+                                                </span>
+                                            <% } else if (familyMember.role === 'grandparent') { %>
+                                                <span class="badge bg-info">
+                                                    <i class="bi bi-heart-fill me-1"></i>Grand-parent
+                                                </span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-person-fill me-1"></i>Membre
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            Rejoint le <%= new Date(familyMember.joined_at).toLocaleDateString('fr-FR') %>
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <a href="/family/<%= familyMember.families.id %>" class="btn btn-outline-primary btn-sm flex-fill">
+                                        <i class="bi bi-eye me-1"></i>Voir
+                                    </a>
+                                    <a href="/messages?family=<%= familyMember.families.id %>" class="btn btn-outline-secondary btn-sm flex-fill">
+                                        <i class="bi bi-chat-dots me-1"></i>Messages
+                                    </a>
+                                    <% if (familyMember.role === 'admin') { %>
+                                        <a href="/family/<%= familyMember.families.id %>/manage" class="btn btn-outline-warning btn-sm">
+                                            <i class="bi bi-gear"></i>
+                                        </a>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <!-- Family Statistics -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="bi bi-graph-up me-2"></i>Statistiques
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h3 class="text-primary mb-1"><%= families.length %></h3>
+                            <small class="text-muted">Famille<%= families.length > 1 ? 's' : '' %></small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-success mb-1">
+                            <%= families.filter(f => f.role === 'admin').length %>
+                        </h3>
+                        <small class="text-muted">Admin</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="bi bi-lightning-fill me-2"></i>Actions rapides
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/family/create" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Créer une famille
+                    </a>
+                    <a href="/invitations" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-envelope me-2"></i>Mes invitations
+                    </a>
+                    <a href="/help/family" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-question-circle me-2"></i>Aide
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="bi bi-lightbulb me-2"></i>Conseils
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="small text-muted">
+                    <p class="mb-2">
+                        <strong>💡 Astuce:</strong> Invitez les grands-parents pour qu'ils puissent 
+                        suivre les progrès de leurs petits-enfants.
+                    </p>
+                    <p class="mb-0">
+                        <strong>🔒 Sécurité:</strong> Seuls les administrateurs peuvent 
+                        gérer les membres de la famille.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
