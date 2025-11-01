@@ -56,52 +56,72 @@
                 </p>
             </div>
             
-            <!-- Children List -->
-            <div id="children-list" class="space-y-4 mb-6">
-                <!-- Child items will be added here dynamically -->
-            </div>
+            <!-- Error Messages -->
+            <% if (locals.messages && locals.messages.error) { %>
+                <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-6">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-red-600 filled">error</span>
+                        <div class="flex-1">
+                            <% messages.error.forEach(function(error) { %>
+                                <p class="text-red-800 font-medium"><%= error %></p>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
             
-            <!-- Add Child Form -->
-            <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
-                <form id="add-child-form">
-                    <div class="grid sm:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Prénom</label>
-                            <input type="text" id="child-first-name" required
+            <!-- Main Form -->
+            <form method="POST" action="/onboarding/children" id="onboarding-form">
+                <!-- Children List -->
+                <div id="children-list" class="space-y-4 mb-6">
+                    <!-- Child items will be added here dynamically -->
+                </div>
+                
+                <!-- Add Child Form -->
+                <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+                    <div id="add-child-inputs">
+                        <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Prénom</label>
+                                <input type="text" id="child-first-name"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Nom</label>
+                                <input type="text" id="child-last-name"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Date de naissance</label>
+                            <input type="date" id="child-birthdate"
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Nom</label>
-                            <input type="text" id="child-last-name" required
-                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
-                        </div>
+                        
+                        <button type="button" id="add-child-btn"
+                            class="w-full bg-primary/10 text-primary border-2 border-primary border-dashed px-6 py-3 rounded-xl font-bold hover:bg-primary/20 transition flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">add</span>
+                            Ajouter cet enfant
+                        </button>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Date de naissance</label>
-                        <input type="date" id="child-birthdate" required
-                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none transition">
-                    </div>
-                    
-                    <button type="submit" 
-                        class="w-full bg-primary/10 text-primary border-2 border-primary border-dashed px-6 py-3 rounded-xl font-bold hover:bg-primary/20 transition flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">add</span>
-                        Ajouter cet enfant
+                </div>
+                
+                <!-- Hidden inputs for form submission (populated by JavaScript) -->
+                <div id="hidden-inputs"></div>
+                
+                <!-- Navigation -->
+                <div class="flex gap-4">
+                    <a href="/onboarding/welcome" 
+                        class="flex-1 bg-white text-gray-700 border-2 border-gray-200 px-6 py-4 rounded-full font-bold text-center hover:border-primary transition">
+                        Retour
+                    </a>
+                    <button type="submit" id="next-btn"
+                        class="flex-1 bg-primary text-gray-900 px-6 py-4 rounded-full font-bold text-center hover:shadow-xl transition transform hover:scale-105">
+                        Continuer
                     </button>
-                </form>
-            </div>
-            
-            <!-- Navigation -->
-            <div class="flex gap-4">
-                <a href="/onboarding/welcome" 
-                    class="flex-1 bg-white text-gray-700 border-2 border-gray-200 px-6 py-4 rounded-full font-bold text-center hover:border-primary transition">
-                    Retour
-                </a>
-                <a href="/onboarding/adults" id="next-btn"
-                    class="flex-1 bg-primary text-gray-900 px-6 py-4 rounded-full font-bold text-center hover:shadow-xl transition transform hover:scale-105">
-                    Continuer
-                </a>
-            </div>
+                </div>
+            </form>
             
             <p class="text-center text-sm text-gray-500 mt-4">
                 Vous pourrez ajouter ou modifier ces informations plus tard
@@ -111,23 +131,56 @@
 </div>
 
 <script>
-// Simple demo functionality - replace with actual backend integration
+// Children management with server-side submission
 const childrenList = document.getElementById('children-list');
-const addChildForm = document.getElementById('add-child-form');
+const addChildBtn = document.getElementById('add-child-btn');
+const hiddenInputs = document.getElementById('hidden-inputs');
+const onboardingForm = document.getElementById('onboarding-form');
 let children = [];
 
-addChildForm.addEventListener('submit', (e) => {
+// Load existing children from session (if any)
+<% if (locals.formData && formData.length > 0) { %>
+    children = <%- JSON.stringify(formData) %>;
+    renderChildren();
+    updateHiddenInputs();
+<% } %>
+
+// Add child button click handler
+addChildBtn.addEventListener('click', (e) => {
     e.preventDefault();
     
+    const firstName = document.getElementById('child-first-name').value.trim();
+    const lastName = document.getElementById('child-last-name').value.trim();
+    const birthdate = document.getElementById('child-birthdate').value;
+    
+    // Validation
+    if (!firstName || !lastName || !birthdate) {
+        alert('Veuillez remplir tous les champs');
+        return;
+    }
+    
     const child = {
-        firstName: document.getElementById('child-first-name').value,
-        lastName: document.getElementById('child-last-name').value,
-        birthdate: document.getElementById('child-birthdate').value
+        name: `${firstName} ${lastName}`,
+        birthDate: birthdate,
+        grade: null // Can be added later
     };
     
     children.push(child);
     renderChildren();
-    addChildForm.reset();
+    updateHiddenInputs();
+    
+    // Clear inputs
+    document.getElementById('child-first-name').value = '';
+    document.getElementById('child-last-name').value = '';
+    document.getElementById('child-birthdate').value = '';
+});
+
+// Form submission validation
+onboardingForm.addEventListener('submit', (e) => {
+    if (children.length === 0) {
+        e.preventDefault();
+        alert('Veuillez ajouter au moins un enfant avant de continuer');
+    }
 });
 
 function renderChildren() {
@@ -137,18 +190,28 @@ function renderChildren() {
                 <span class="material-symbols-outlined text-blue-600 filled">child_care</span>
             </div>
             <div class="flex-grow">
-                <h3 class="font-bold text-gray-900">${child.firstName} ${child.lastName}</h3>
-                <p class="text-sm text-gray-500">Né(e) le ${new Date(child.birthdate).toLocaleDateString('fr-FR')}</p>
+                <h3 class="font-bold text-gray-900">${child.name}</h3>
+                <p class="text-sm text-gray-500">Né(e) le ${new Date(child.birthDate).toLocaleDateString('fr-FR')}</p>
             </div>
-            <button onclick="removeChild(${index})" class="w-10 h-10 rounded-full hover:bg-red-50 flex items-center justify-center text-red-500 transition">
+            <button type="button" onclick="removeChild(${index})" class="w-10 h-10 rounded-full hover:bg-red-50 flex items-center justify-center text-red-500 transition">
                 <span class="material-symbols-outlined">delete</span>
             </button>
         </div>
     `).join('');
 }
 
+function updateHiddenInputs() {
+    // Create hidden inputs for each child to submit to server
+    hiddenInputs.innerHTML = children.map((child, index) => `
+        <input type="hidden" name="children[${index}][name]" value="${child.name}">
+        <input type="hidden" name="children[${index}][birthDate]" value="${child.birthDate}">
+        <input type="hidden" name="children[${index}][grade]" value="${child.grade || ''}">
+    `).join('');
+}
+
 function removeChild(index) {
     children.splice(index, 1);
     renderChildren();
+    updateHiddenInputs();
 }
 </script>
