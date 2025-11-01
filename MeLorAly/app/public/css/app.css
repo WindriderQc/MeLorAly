@@ -1,14 +1,21 @@
 /* MeLorAly Custom Styles */
 
 :root {
-    --primary-color: #007bff;
+    --primary-color: #6366f1;
+    --primary-dark: #4f46e5;
     --secondary-color: #6c757d;
-    --success-color: #28a745;
-    --info-color: #17a2b8;
-    --warning-color: #ffc107;
-    --danger-color: #dc3545;
+    --success-color: #10b981;
+    --info-color: #3b82f6;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
     --light-color: #f8f9fa;
-    --dark-color: #343a40;
+    --dark-color: #1f2937;
+    --accent-color: #ec4899;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #374151;
 }
 
 /* Custom navbar styling */
@@ -16,26 +23,38 @@
     font-size: 1.5rem;
 }
 
+.navbar-dark {
+    background-color: var(--primary-color) !important;
+}
+
 /* Hero section */
 .hero-section {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #0056b3 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
 }
 
 /* Cards */
 .card {
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.15s ease-in-out;
+    background: white;
 }
 
 .card:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-header {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 1.25rem;
 }
 
 /* Authentication pages */
 .min-vh-100 {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
 }
 
 /* Dashboard specific */
@@ -57,8 +76,9 @@
 
 /* Button enhancements */
 .btn {
-    border-radius: 0.375rem;
+    border-radius: 0.5rem;
     font-weight: 500;
+    padding: 0.5rem 1rem;
 }
 
 .btn-primary {
@@ -67,8 +87,24 @@
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
 }
 
 /* Utility classes */
@@ -115,7 +151,7 @@
 
 /* Avatar placeholders */
 .avatar-placeholder {
-    background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
     display: flex;
     align-items: center;
@@ -126,10 +162,38 @@
 /* Family cards */
 .family-card {
     border-left: 4px solid var(--primary-color);
+    background: white;
 }
 
 .child-card {
     border-left: 4px solid var(--success-color);
+    background: white;
+}
+
+/* Badge colors */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+.bg-info {
+    background-color: var(--info-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.text-success {
+    color: var(--success-color) !important;
 }
 
 /* Notification badges */

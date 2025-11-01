@@ -17,6 +17,39 @@ router.get('/register', (req, res) => {
   res.render('auth/register');
 });
 
+// Auth callback handler (for email confirmation)
+router.get('/callback', async (req, res) => {
+  const { token_hash, type } = req.query;
+
+  if (token_hash && type) {
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        token_hash,
+        type: type
+      });
+
+      if (error) {
+        console.error('Verification error:', error);
+        req.flash('error', 'Erreur lors de la vérification de votre email.');
+        return res.redirect('/auth/login');
+      }
+
+      if (data.user) {
+        req.session.user = data.user;
+        req.flash('success', 'Email vérifié avec succès! Bienvenue sur MeLorAly.');
+        return res.redirect('/dashboard');
+      }
+    } catch (error) {
+      console.error('Callback error:', error);
+      req.flash('error', 'Une erreur est survenue.');
+      return res.redirect('/auth/login');
+    }
+  }
+
+  req.flash('error', 'Lien de vérification invalide.');
+  res.redirect('/auth/login');
+});
+
 // Handle login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
