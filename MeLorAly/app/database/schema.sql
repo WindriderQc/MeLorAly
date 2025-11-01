@@ -1,0 +1,241 @@
+-- MeLorAly Database Schema for Supabase
+-- Run this in your Supabase SQL Editor
+
+-- Enable necessary extensions
+create extension if not exists "uuid-ossp";
+
+-- Profiles table (extends auth.users)
+create table public.profiles (
+  id uuid references auth.users on delete cascade primary key,
+  full_name text,
+  avatar_url text,
+  role text check (role in ('parent', 'grandparent')),
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Families table
+create table public.families (
+  id uuid default uuid_generate_v4() primary key,
+  name text not null,
+  avatar_url text,
+  created_by uuid references auth.users(id) on delete cascade not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Family members (junction table)
+create table public.family_members (
+  id uuid default uuid_generate_v4() primary key,
+  family_id uuid references public.families(id) on delete cascade not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  role text check (role in ('admin', 'member', 'grandparent')) default 'member',
+  joined_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(family_id, user_id)
+);
+
+-- Children table
+create table public.children (
+  id uuid default uuid_generate_v4() primary key,
+  family_id uuid references public.families(id) on delete cascade not null,
+  name text not null,
+  birth_date date,
+  grade text,
+  avatar_url text,
+  created_by uuid references auth.users(id) on delete cascade not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Messages table
+create table public.messages (
+  id uuid default uuid_generate_v4() primary key,
+  family_id uuid references public.families(id) on delete cascade not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  content text not null,
+  message_type text default 'text' check (message_type in ('text', 'image', 'file')),
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Notifications table
+create table public.notifications (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  type text not null,
+  title text not null,
+  message text,
+  read boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Invitations table
+create table public.invitations (
+  id uuid default uuid_generate_v4() primary key,
+  family_id uuid references public.families(id) on delete cascade not null,
+  email text not null,
+  role text check (role in ('member', 'grandparent')) default 'member',
+  invited_by uuid references auth.users(id) on delete cascade not null,
+  status text check (status in ('pending', 'accepted', 'expired')) default 'pending',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  expires_at timestamp with time zone default timezone('utc'::text, now() + interval '7 days') not null
+);
+
+-- Row Level Security (RLS) Policies
+alter table public.profiles enable row level security;
+alter table public.families enable row level security;
+alter table public.family_members enable row level security;
+alter table public.children enable row level security;
+alter table public.messages enable row level security;
+alter table public.notifications enable row level security;
+alter table public.invitations enable row level security;
+
+-- Profiles: Users can only see and edit their own profile
+create policy "Users can view own profile" on public.profiles
+  for select using (auth.uid() = id);
+
+create policy "Users can update own profile" on public.profiles
+  for update using (auth.uid() = id);
+
+create policy "Users can insert own profile" on public.profiles
+  for insert with check (auth.uid() = id);
+
+-- Families: Users can only see families they're members of
+create policy "Users can view families they belong to" on public.families
+  for select using (
+    exists (
+      select 1 from public.family_members 
+      where family_id = families.id 
+      and user_id = auth.uid()
+    )
+  );
+
+create policy "Users can create families" on public.families
+  for insert with check (auth.uid() = created_by);
+
+create policy "Family admins can update families" on public.families
+  for update using (
+    exists (
+      select 1 from public.family_members 
+      where family_id = families.id 
+      and user_id = auth.uid() 
+      and role = 'admin'
+    )
+  );
+
+-- Family Members: Users can see members of families they belong to
+create policy "Users can view family members" on public.family_members
+  for select using (
+    exists (
+      select 1 from public.family_members fm
+      where fm.family_id = family_members.family_id 
+      and fm.user_id = auth.uid()
+    )
+  );
+
+create policy "Family admins can manage members" on public.family_members
+  for all using (
+    exists (
+      select 1 from public.family_members 
+      where family_id = family_members.family_id 
+      and user_id = auth.uid() 
+      and role = 'admin'
+    )
+  );
+
+-- Children: Family members can see children
+create policy "Family members can view children" on public.children
+  for select using (
+    exists (
+      select 1 from public.family_members 
+      where family_id = children.family_id 
+      and user_id = auth.uid()
+    )
+  );
+
+create policy "Family members can manage children" on public.children
+  for all using (
+    exists (
+      select 1 from public.family_members 
+      where family_id = children.family_id 
+      and user_id = auth.uid()
+    )
+  );
+
+-- Messages: Family members can see and send messages
+create policy "Family members can view messages" on public.messages
+  for select using (
+    exists (
+      select 1 from public.family_members 
+      where family_id = messages.family_id 
+      and user_id = auth.uid()
+    )
+  );
+
+create policy "Family members can send messages" on public.messages
+  for insert with check (
+    exists (
+      select 1 from public.family_members 
+      where family_id = messages.family_id 
+      and user_id = auth.uid()
+    ) and auth.uid() = user_id
+  );
+
+-- Notifications: Users can only see their own notifications
+create policy "Users can view own notifications" on public.notifications
+  for select using (auth.uid() = user_id);
+
+create policy "Users can update own notifications" on public.notifications
+  for update using (auth.uid() = user_id);
+
+-- Invitations: Users can see invitations for their families or sent to their email
+create policy "Users can view relevant invitations" on public.invitations
+  for select using (
+    auth.uid() = invited_by or 
+    auth.email() = email or
+    exists (
+      select 1 from public.family_members 
+      where family_id = invitations.family_id 
+      and user_id = auth.uid() 
+      and role = 'admin'
+    )
+  );
+
+-- Functions and Triggers for updated_at
+create or replace function public.handle_updated_at()
+returns trigger
+language plpgsql
+security definer
+as $$
+begin
+  new.updated_at = timezone('utc'::text, now());
+  return new;
+end;
+$$;
+
+-- Apply updated_at triggers
+create trigger handle_profiles_updated_at before update on public.profiles
+  for each row execute function public.handle_updated_at();
+
+create trigger handle_families_updated_at before update on public.families
+  for each row execute function public.handle_updated_at();
+
+create trigger handle_children_updated_at before update on public.children
+  for each row execute function public.handle_updated_at();
+
+-- Function to automatically create profile after user signup
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+as $$
+begin
+  insert into public.profiles (id, full_name)
+  values (new.id, new.raw_user_meta_data->>'full_name');
+  return new;
+end;
+$$;
+
+-- Trigger to create profile on signup
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
