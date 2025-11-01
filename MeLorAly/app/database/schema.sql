@@ -102,6 +102,7 @@ create policy "Users can insert own profile" on public.profiles
 -- Families: Users can only see families they're members of
 create policy "Users can view families they belong to" on public.families
   for select using (
+    created_by = auth.uid() or
     exists (
       select 1 from public.family_members 
       where family_id = families.id 
@@ -110,35 +111,30 @@ create policy "Users can view families they belong to" on public.families
   );
 
 create policy "Users can create families" on public.families
-  for insert with check (auth.uid() = created_by);
+  for insert with check (created_by = auth.uid());
 
-create policy "Family admins can update families" on public.families
-  for update using (
-    exists (
-      select 1 from public.family_members 
-      where family_id = families.id 
-      and user_id = auth.uid() 
-      and role = 'admin'
-    )
-  );
+create policy "Family creators can update families" on public.families
+  for update using (created_by = auth.uid());
 
 -- Family Members: Users can see members of families they belong to
 create policy "Users can view family members" on public.family_members
-  for select using (
+  for select using (user_id = auth.uid());
+
+create policy "Users can insert family members" on public.family_members
+  for insert with check (
     exists (
-      select 1 from public.family_members fm
-      where fm.family_id = family_members.family_id 
-      and fm.user_id = auth.uid()
+      select 1 from public.families 
+      where id = family_members.family_id 
+      and created_by = auth.uid()
     )
   );
 
-create policy "Family admins can manage members" on public.family_members
-  for all using (
+create policy "Users can delete family members" on public.family_members
+  for delete using (
     exists (
-      select 1 from public.family_members 
-      where family_id = family_members.family_id 
-      and user_id = auth.uid() 
-      and role = 'admin'
+      select 1 from public.families 
+      where id = family_members.family_id 
+      and created_by = auth.uid()
     )
   );
 

@@ -5,11 +5,11 @@ const requireAuth = (req, res, next) => {
     return res.redirect('/auth/login');
   }
   
-  // Attach supabase to request for use in routes
+  // Attach supabase to request for use in routes (using service key to bypass RLS)
   const { createClient } = require('@supabase/supabase-js');
   req.supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY
+    process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY
   );
   
   next();

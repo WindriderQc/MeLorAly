@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { createClient } = require('@supabase/supabase-js');
+const { requireAuth } = require('../middleware/auth');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+// All family routes require authentication
+router.use(requireAuth);
 
 // Family management page
 router.get('/', async (req, res) => {
   try {
     // Get user's families with member details
-    const { data: familyMembers } = await supabase
+    const { data: familyMembers } = await req.supabase
       .from('family_members')
       .select(`
         *,
@@ -46,7 +44,7 @@ router.post('/create', async (req, res) => {
   
   try {
     // Create the family
-    const { data: family, error: familyError } = await supabase
+    const { data: family, error: familyError } = await req.supabase
       .from('families')
       .insert([{
         name: family_name,
@@ -55,10 +53,13 @@ router.post('/create', async (req, res) => {
       .select()
       .single();
 
-    if (familyError) throw familyError;
+    if (familyError) {
+      console.error('Family creation error:', familyError);
+      throw familyError;
+    }
 
     // Add creator as admin member
-    const { error: memberError } = await supabase
+    const { error: memberError } = await req.supabase
       .from('family_members')
       .insert([{
         family_id: family.id,
@@ -66,13 +67,16 @@ router.post('/create', async (req, res) => {
         role: 'admin'
       }]);
 
-    if (memberError) throw memberError;
+    if (memberError) {
+      console.error('Member creation error:', memberError);
+      throw memberError;
+    }
 
     req.flash('success', `Famille "${family_name}" créée avec succès!`);
     res.redirect('/family');
   } catch (error) {
     console.error('Family creation error:', error);
-    req.flash('error', 'Erreur lors de la création de la famille.');
+    req.flash('error', `Erreur lors de la création de la famille: ${error.message}`);
     res.redirect('/family/create');
   }
 });

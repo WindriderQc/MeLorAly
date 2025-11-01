@@ -75,7 +75,7 @@ const supportRoutes = require('./routes/support');
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', requireAuth, dashboardRoutes);
-app.use('/family', requireAuth, familyRoutes);
+app.use('/family', familyRoutes);
 app.use('/onboarding', onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
 app.use('/education', educationRoutes);
