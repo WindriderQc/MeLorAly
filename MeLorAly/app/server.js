@@ -36,16 +36,12 @@ app.use(session({
 
 app.use(flash());
 
-// CSRF Protection
-const csrfProtection = csrf({ cookie: false });
-app.use(csrfProtection);
-
 // Global middleware to add user and messages to all views
 app.use(async (req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.messages = req.flash();
   res.locals.currentPath = req.path;
-  res.locals.csrfToken = req.csrfToken();
+  res.locals.csrfToken = ''; // Default empty, will be set by CSRF middleware where needed
   
   // If user is logged in, get their profile
   if (req.session.user) {
@@ -69,6 +65,15 @@ app.use(async (req, res, next) => {
 // Import authentication middleware
 const { requireAuth } = require('./middleware/auth');
 
+// CSRF Protection middleware (for protected routes only)
+const csrfProtection = csrf({ cookie: false });
+
+// Middleware to set CSRF token in locals
+const setCsrfToken = (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+};
+
 // Routes
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
@@ -82,7 +87,7 @@ const supportRoutes = require('./routes/support');
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/family', familyRoutes);
-app.use('/onboarding', onboardingRoutes);
+app.use('/onboarding', csrfProtection, setCsrfToken, onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
 app.use('/education', educationRoutes);
 app.use('/profile', profileRoutes);
