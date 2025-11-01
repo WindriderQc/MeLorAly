@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<title>Family App Invitation</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#c98d1d",
+            "background-light": "#f8f7f6",
+            "background-dark": "#211b11",
+            "foreground-light": "#171511",
+            "foreground-dark": "#f8f7f6",
+            "foreground-muted-light": "#877b64",
+            "foreground-muted-dark": "#a19b8e",
+            "border-light": "#e5e2dc",
+            "border-dark": "#4c4840"
+          },
+          fontFamily: {
+            "display": ["Epilogue"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark">
+<div class="flex flex-col min-h-screen">
+<header class="sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-10">
+<div class="container mx-auto px-4">
+<div class="flex items-center justify-between h-16">
+<button class="p-2 -ml-2">
+<svg class="text-foreground-light dark:text-foreground-dark" fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
+</svg>
+</button>
+<h1 class="text-lg font-bold">Inviter des membres</h1>
+<div class="w-8"></div>
+</div>
+</div>
+</header>
+<main class="flex-grow container mx-auto px-4 py-8 text-center">
+<img alt="Illustration of family members connecting" class="mx-auto w-48 h-48 mb-6 object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoZ_5A1qXIeGmzdKsxMsfl1pw0ezZ8iyN9dERWQRSvpKdUsKwEd-dAoyEZnej_oi70Pjr-O2Op7ubb3X44mgm6lsD2_h14snZsRUeZa9VLsu-d9WA4op7cuxLBjB9DFrvJH12UbeMpTeMd8zbaQF8vmxLpedy5qjkq1NueVRNAw7lV4LlsD8lETxY3aOf2RrXvNGASe76I4ZCcbqzHhvyihQEviw63LB9aBNFepkWPSv-dmLYEaUwvMDKWKTjhTekxNXSF0OdmvEg"/>
+<h2 class="text-2xl font-bold mb-2">Invitez votre famille à rejoindre votre espace</h2>
+<p class="text-foreground-muted-light dark:text-foreground-muted-dark max-w-md mx-auto mb-8">Partagez le lien d'invitation avec les membres de votre famille pour qu'ils puissent rejoindre votre espace.</p>
+<div class="space-y-4 max-w-sm mx-auto">
+<div class="relative">
+<svg class="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted-light dark:text-foreground-muted-dark" fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-8,144H40V74.19l83.53,52.21a8,8,0,0,0,8.94,0L216,74.19V192Z"></path></svg>
+<input class="w-full h-12 pl-10 pr-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary placeholder-foreground-muted-light dark:placeholder-foreground-muted-dark" placeholder="Entrez l'adresse e-mail" type="email"/>
+</div>
+<button class="w-full h-12 px-6 bg-primary text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
+          Envoyer une invitation
+        </button>
+</div>
+<div class="flex items-center my-8 max-w-sm mx-auto">
+<div class="flex-grow h-px bg-border-light dark:bg-border-dark"></div>
+<span class="px-4 text-sm font-medium text-foreground-muted-light dark:text-foreground-muted-dark">OU</span>
+<div class="flex-grow h-px bg-border-light dark:bg-border-dark"></div>
+</div>
+<div class="max-w-sm mx-auto">
+<button class="w-full h-12 px-6 bg-primary/10 dark:bg-primary/20 text-primary font-bold rounded-lg hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors flex items-center justify-center space-x-2">
+<svg fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M136,104a8,8,0,1,1-8-8A8,8,0,0,1,136,104Zm-48,0a8,8,0,1,0-8,8A8,8,0,0,0,88,104Zm-8,40a8,8,0,1,0,8,8A8,8,0,0,0,80,144Zm48,0a8,8,0,1,0,8,8A8,8,0,0,0,128,144Zm85.78-56.57a8,8,0,0,0-10.25-2.29l-34,17a8,8,0,0,0-4.57,9.79,32.11,32.11,0,0,1,0,32.14,8,8,0,0,0,4.57,9.79l34,17A8,8,0,0,0,216,168a32,32,0,1,0-27.22-31.43l-34-17A32,32,0,1,0,88,104h0a32.09,32.09,0,0,0-4.46.43,8,8,0,0,0-5.83,8.42,48.06,48.06,0,0,0,0,26.3,8,8,0,0,0,5.83,8.42A32.09,32.09,0,0,0,88,152h0a32,32,0,1,0,32-32l34-17a8,8,0,0,0,2.49-.44A32.22,32.22,0,0,0,213.78,87.43ZM200,56a16,16,0,1,1-16,16A16,16,0,0,1,200,56ZM56,128a16,16,0,1,1,16,16A16,16,0,0,1,56,128Zm144,72a16,16,0,1,1,16-16A16,16,0,0,1,200,200Z"></path></svg>
+<span>Partager le lien d'invitation</span>
+</button>
+</div>
+</main>
+<footer class="sticky bottom-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm border-t border-border-light dark:border-border-dark">
+<nav class="container mx-auto px-4 h-20 flex items-center justify-around">
+<a class="flex flex-col items-center justify-center gap-1 text-foreground-muted-light dark:text-foreground-muted-dark w-1/4" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M218.83,103.77l-80-75.48a1.14,1.14,0,0,1-.11-.11,16,16,0,0,0-21.53,0l-.11.11L37.17,103.77A16,16,0,0,0,32,115.55V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V160h32v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V115.55A16,16,0,0,0,218.83,103.77ZM208,208H160V160a16,16,0,0,0-16-16H112a16,16,0,0,0-16,16v48H48V115.55l.11-.1L128,40l79.9,75.43.11.1Z"></path></svg>
+<span class="text-xs font-medium">Accueil</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-primary w-1/4" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"></path></svg>
+<span class="text-xs font-bold">Espace Famille</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-foreground-muted-light dark:text-foreground-muted-dark w-1/4" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path></svg>
+<span class="text-xs font-medium">Profil</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-foreground-muted-light dark:text-foreground-muted-dark w-1/4" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"></path></svg>
+<span class="text-xs font-medium">Messages</span>
+</a>
+</nav>
+</footer>
+</div>
+
+</body></html>

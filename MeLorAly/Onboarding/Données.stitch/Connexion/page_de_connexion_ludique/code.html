@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#f58a3d",
+            "background-light": "#f8f7f5",
+            "background-dark": "#221810",
+          },
+          fontFamily: {
+            "display": ["Epilogue"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden">
+<div class="flex-grow">
+<div class="relative h-64 w-full">
+<div class="absolute inset-0 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAYYaw6CoDQRal75yKoi1yQpgoNvQ_j-ozZtn4IglfAR6hX_M_P_pnF8cvdW_aeyxwj1Kvcl1MMavQPn-GxbLE13FwLjTqMYbsjKm-4fLPViZYtnvBwMubGi5R8wv2YUauNSidL_STtYkDb4ONUnSxNK0sPKDZqg8GtAQ05vE6wucJWjq8eN9w2e9KCZjSsmuz2lj_VgYhAPWUwKKTDpGCl7Q2mpD_Y1e3Z41n9YcFScXUz4caOVlDECWbVa_yBi55FMcy3B9KYqwc");'></div>
+</div>
+<div class="px-6 py-8">
+<h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Heureux de te revoir !</h1>
+<p class="text-center text-gray-600 dark:text-gray-400 mt-2">Connecte-toi à ton compte</p>
+<form class="mt-8 space-y-6">
+<div>
+<label class="sr-only" for="email">Email ou nom d'utilisateur</label>
+<input autocomplete="email" class="w-full rounded-lg bg-background-light/50 dark:bg-background-dark/50 border-gray-300 dark:border-gray-700 p-4 text-base placeholder-gray-500 dark:placeholder-gray-400 focus:ring-primary focus:border-primary" id="email" name="email" placeholder="Email ou nom d'utilisateur" required="" type="email"/>
+</div>
+<div>
+<label class="sr-only" for="password">Mot de passe</label>
+<input autocomplete="current-password" class="w-full rounded-lg bg-background-light/50 dark:bg-background-dark/50 border-gray-300 dark:border-gray-700 p-4 text-base placeholder-gray-500 dark:placeholder-gray-400 focus:ring-primary focus:border-primary" id="password" name="password" placeholder="Mot de passe" required="" type="password"/>
+</div>
+<div>
+<button class="w-full flex justify-center py-4 px-4 border border-transparent rounded-full shadow-sm text-lg font-bold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" type="submit">
+              Se connecter
+            </button>
+</div>
+</form>
+<div class="mt-6">
+<div class="relative">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+</div>
+<div class="relative flex justify-center text-sm">
+<span class="px-2 bg-background-light dark:bg-background-dark text-gray-500 dark:text-gray-400">
+                Ou continuer avec
+              </span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-2 gap-4">
+<a class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-background-dark/50 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-background-dark/70" href="#">
+<svg class="w-5 h-5 mr-2" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg>
+              Google
+            </a>
+<a class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-background-dark/50 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-background-dark/70" href="#">
+<svg class="w-5 h-5 mr-2" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Apple</title><path d="M12.01,1.98C10.39,1.96,8.48,3.06,7.2,4.45c-1.3,1.4-2.3,3.46-2.29,5.55c0.01,2.83,2.29,4.28,2.3,4.29 c0.01,0,0.11-0.06,0.26-0.14c0.16-0.09,0.31-0.17,0.45-0.24c0.94-0.48,1.62-0.78,2.75-0.79c1.07,0.01,1.88,0.36,2.72,0.76 c0.21,0.1,0.38,0.19,0.52,0.27s0.27,0.15,0.27,0.15c0.01,0-0.01-0.01-0.01-0.01c2.14-1.34,3.13-4.04,3.12-4.05 c-0.01-0.02-2.42-0.96-2.44-3.69c-0.02-2.19,1.57-3.38,1.75-3.48C15.75,2.47,13.62,1.99,12.01,1.98z M14.53,0 c-0.01,0-0.02,0-0.03,0c-0.91,0.02-1.83,0.38-2.6,0.91C11.13,0.39,10.2,0.04,9.26,0c-0.01,0-0.02,0-0.03,0 c-1.5,0.03-3.11,0.7-4.14,1.87c-1.3,1.44-2.15,3.3-2.09,5.32c0.06,2.5,1.7,4.68,3.47,5.93c0.67,0.47,1.48,0.78,2.44,0.76 c0.54,0.01,1.07-0.1,1.57-0.31c0.49-0.2,0.96-0.45,1.55-0.46c0.59,0.01,1.05,0.25,1.54,0.46c0.5,0.21,1.03,0.32,1.57,0.31 c0.97,0.01,1.79-0.29,2.46-0.76c1.78-1.25,3.41-3.43,3.47-5.93c0.06-2.22-0.94-4.23-2.42-5.46C17.72,0.66,16.08-0.03,14.53,0z" fill="currentColor"></path></svg>
+              Apple
+            </a>
+</div>
+</div>
+</div>
+</div>
+<div class="pb-8 px-6 text-center">
+<a class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary underline" href="#">
+        Tu n'as pas de compte ? S'inscrire
+      </a>
+</div>
+</div>
+
+</body></html>

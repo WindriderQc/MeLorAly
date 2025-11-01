@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c98d1d",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#211b11",
+                    },
+                    fontFamily: {
+                        "display": ["Epilogue"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-background-dark dark:text-background-light">
+<div class="relative flex h-auto min-h-screen w-full flex-col justify-between overflow-x-hidden">
+<div class="flex-grow">
+<header class="sticky top-0 z-10 flex items-center justify-between bg-background-light/80 p-4 pb-2 backdrop-blur-sm dark:bg-background-dark/80">
+<button class="flex size-10 items-center justify-center rounded-full text-background-dark dark:text-background-light">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-xl font-bold pr-10">FAQ</h1>
+</header>
+<main class="p-4">
+<div class="relative mb-6">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-background-dark/50 dark:text-background-light/50">search</span>
+<input class="w-full rounded-full border-none bg-background-light-700/50 py-3 pl-12 pr-4 text-background-dark placeholder-background-dark/50 focus:ring-2 focus:ring-primary dark:bg-background-dark-700/50 dark:text-background-light dark:placeholder-background-light/50" placeholder="Rechercher dans la FAQ" type="text"/>
+</div>
+<div class="space-y-6">
+<div class="space-y-4">
+<h2 class="text-2xl font-bold">Compte</h2>
+<div class="space-y-2">
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Création de compte</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Voici les étapes pour créer un compte : ...</p>
+</details>
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Réinitialisation du mot de passe</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Pour réinitialiser votre mot de passe, veuillez suivre ces instructions : ...</p>
+</details>
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Modification des informations</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Vous pouvez modifier vos informations personnelles dans les paramètres de votre profil.</p>
+</details>
+</div>
+</div>
+<div class="space-y-4">
+<h2 class="text-2xl font-bold">Fonctionnalités</h2>
+<div class="space-y-2">
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Espace famille</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">L'espace famille vous permet de connecter et de partager avec vos proches.</p>
+</details>
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Ajout de membres</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Pour ajouter des membres, allez dans l'espace famille et cliquez sur "Inviter".</p>
+</details>
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Outils pédagogiques</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Nos outils pédagogiques sont conçus pour accompagner le développement de l'enfant.</p>
+</details>
+</div>
+</div>
+<div class="space-y-4">
+<h2 class="text-2xl font-bold">Support</h2>
+<div class="space-y-2">
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Contacter le support</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Vous pouvez nous contacter via le formulaire de contact dans l'application.</p>
+</details>
+<details class="group rounded-lg bg-background-light/50 p-4 dark:bg-background-dark/50">
+<summary class="flex cursor-pointer list-none items-center justify-between">
+<span class="font-semibold">Signaler un problème</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-2 text-background-dark/70 dark:text-background-light/70">Pour signaler un problème, rendez-vous dans la section "Aide et support".</p>
+</details>
+</div>
+</div>
+</div>
+</main>
+</div>
+<nav class="sticky bottom-0 z-10 border-t border-background-dark/10 bg-background-light/80 px-4 pb-3 pt-2 backdrop-blur-sm dark:border-background-light/10 dark:bg-background-dark/80">
+<div class="flex justify-around">
+<a class="flex flex-1 flex-col items-center gap-1 text-background-dark/60 dark:text-background-light/60" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-xs font-medium">Accueil</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-background-dark/60 dark:text-background-light/60" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-xs font-medium">Espace Famille</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<div class="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-primary"></div>
+</div>
+<span class="text-xs font-bold">Profil</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-background-dark/60 dark:text-background-light/60" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-xs font-medium">Messages</span>
+</a>
+</div>
+<div class="mx-auto mt-2 h-1 w-24 rounded-full bg-background-dark dark:bg-background-light"></div>
+</nav>
+</div>
+
+
+</body></html>

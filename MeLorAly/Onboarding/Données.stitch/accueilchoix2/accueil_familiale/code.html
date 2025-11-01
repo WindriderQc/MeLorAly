@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Comic+Neue:wght@400;700&amp;family=Fredoka+One&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        @layer base {
+            :root {
+                --color-primary: #b6862c;
+                --color-secondary: #2c3e50;
+                --color-light: #ffffff;
+                --color-dark: #000000;
+            }
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "var(--color-primary)",
+                        "secondary": "var(--color-secondary)",
+                        "background-light": "var(--color-light)",
+                        "background-dark": "var(--color-secondary)",
+                        "text-light": "var(--color-light)",
+                        "text-dark": "var(--color-dark)",
+                    },
+                    fontFamily: {
+                        "display": ["Fredoka One", "cursive"],
+                        "body": ["Comic Neue", "cursive"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+            background-color: #FEFBF3;
+        }
+        .dark body {
+             background-color: var(--color-secondary);
+        }
+        .icon-sun {
+            display: inline;
+        }
+        .icon-moon {
+            display: none;
+        }
+        .dark .icon-sun {
+            display: none;
+        }
+        .dark .icon-moon {
+            display: inline;
+        }
+        .card-icon {
+            font-size: 64px;
+            color: var(--color-primary);
+        }
+        .dark .card-icon {
+             color: var(--color-light);
+        }
+        .family-icon {
+             font-size: 80px;
+             color: var(--color-primary);
+        }
+        .dark .family-icon {
+            color: var(--color-light);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body bg-background-light dark:bg-background-dark text-text-dark dark:text-text-light">
+<div class="relative flex h-auto min-h-screen w-full flex-col justify-between">
+<div class="pb-24">
+<header class="flex items-center justify-between p-4 bg-transparent sticky top-0 z-10">
+<div class="w-12"></div>
+<h1 class="flex-1 text-center text-2xl font-display text-secondary dark:text-primary">Kido</h1>
+<button class="flex h-12 w-12 items-center justify-center rounded-full text-text-dark dark:text-text-light">
+<span class="material-symbols-outlined icon-sun" style="font-size: 28px;">light_mode</span>
+<span class="material-symbols-outlined icon-moon" style="font-size: 28px;">dark_mode</span>
+</button>
+</header>
+<div class="px-6 pt-2 text-center">
+<h2 class="text-3xl font-display text-secondary dark:text-primary">Bonjour Sophie !</h2>
+<p class="text-text-dark/80 dark:text-text-light/80 mt-2 text-lg">Prêt pour une nouvelle aventure ?</p>
+</div>
+<div class="px-6 mt-8">
+<h3 class="text-xl font-display text-secondary dark:text-primary mb-4">Ton univers</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex-shrink-0 w-full">
+<div class="w-full h-40 rounded-xl bg-white dark:bg-secondary/80 flex flex-col items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300" style="border-radius: 30px;">
+<span class="material-symbols-outlined card-icon">child_care</span>
+<p class="mt-2 text-base font-bold text-secondary dark:text-white text-center">Pré-scolaire</p>
+</div>
+</div>
+<div class="flex-shrink-0 w-full">
+<div class="w-full h-40 rounded-xl bg-white dark:bg-secondary/80 flex flex-col items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300" style="border-radius: 30px;">
+<span class="material-symbols-outlined card-icon">school</span>
+<p class="mt-2 text-base font-bold text-secondary dark:text-white text-center">Scolaire</p>
+</div>
+</div>
+<div class="flex-shrink-0 w-full">
+<div class="w-full h-40 rounded-xl bg-white dark:bg-secondary/80 flex flex-col items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300" style="border-radius: 30px;">
+<span class="material-symbols-outlined card-icon">escalator_warning</span>
+<p class="mt-2 text-base font-bold text-secondary dark:text-white text-center">Parental</p>
+</div>
+</div>
+<div class="flex-shrink-0 w-full">
+<div class="w-full h-40 rounded-xl bg-white dark:bg-secondary/80 flex flex-col items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-300" style="border-radius: 30px;">
+<span class="material-symbols-outlined card-icon">elderly</span>
+<p class="mt-2 text-base font-bold text-secondary dark:text-white text-center">Grands-parents</p>
+</div>
+</div>
+</div>
+</div>
+<div class="px-6 mt-8">
+<h3 class="text-xl font-display text-secondary dark:text-primary">Espace Famille</h3>
+<div class="mt-4 bg-white dark:bg-secondary/80 rounded-xl p-4 flex items-center gap-4 shadow-lg" style="border-radius: 30px;">
+<div class="flex-[2_2_0px]">
+<p class="text-base font-bold text-secondary dark:text-white">Famille Martin</p>
+<p class="text-sm text-text-dark/80 dark:text-text-light/80 mt-1">Partagez des moments précieux ensemble.</p>
+<button class="mt-3 bg-primary text-white font-bold py-2 px-4 rounded-full text-sm">Voir l'espace</button>
+</div>
+<div class="flex-1 aspect-square rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined family-icon">groups</span>
+</div>
+</div>
+</div>
+</div>
+<footer class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-secondary/80 backdrop-blur-sm" style="border-top-left-radius: 30px; border-top-right-radius: 30px;">
+<div class="flex justify-around items-center px-2 pt-3 pb-5">
+<a class="flex flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 28px;">home</span>
+</div>
+<p class="text-xs font-bold tracking-wide">Accueil</p>
+</a>
+<a class="flex flex-col items-center justify-end gap-1 text-text-dark/60 dark:text-text-light/60" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 28px;">diversity_3</span>
+</div>
+<p class="text-xs font-medium tracking-wide">Famille</p>
+</a>
+<a class="flex flex-col items-center justify-end gap-1 text-text-dark/60 dark:text-text-light/60" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 28px;">person</span>
+</div>
+<p class="text-xs font-medium tracking-wide">Profil</p>
+</a>
+<a class="flex flex-col items-center justify-end gap-1 text-text-dark/60 dark:text-text-light/60" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 28px;">chat_bubble</span>
+</div>
+<p class="text-xs font-medium tracking-wide">Messages</p>
+</a>
+</div>
+</footer>
+</div>
+
+</body></html>

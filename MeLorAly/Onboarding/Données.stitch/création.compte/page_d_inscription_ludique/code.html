@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign Up</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f58a3d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221810",
+                    },
+                    fontFamily: {
+                        "display": ["Epilogue"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .form-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex flex-col min-h-screen">
+<header class="flex justify-between items-center p-4">
+<button class="text-background-dark dark:text-background-light">
+<span class="material-symbols-outlined">
+                    arrow_back
+                </span>
+</button>
+<button class="text-background-dark dark:text-background-light">
+<span class="material-symbols-outlined">
+                    help_outline
+                </span>
+</button>
+</header>
+<main class="flex-grow flex flex-col px-4">
+<h1 class="text-3xl font-bold text-center text-background-dark dark:text-background-light mt-4 mb-8">Créer un compte</h1>
+<div class="flex-grow flex flex-col justify-center">
+<form class="space-y-4">
+<input class="w-full h-14 bg-white/50 dark:bg-black/20 border-0 rounded-full px-6 text-background-dark dark:text-background-light placeholder-background-dark/50 dark:placeholder-background-light/50 focus:ring-2 focus:ring-primary" placeholder="Nom" type="text"/>
+<input class="w-full h-14 bg-white/50 dark:bg-black/20 border-0 rounded-full px-6 text-background-dark dark:text-background-light placeholder-background-dark/50 dark:placeholder-background-light/50 focus:ring-2 focus:ring-primary" placeholder="Prénom" type="text"/>
+<input class="w-full h-14 bg-white/50 dark:bg-black/20 border-0 rounded-full px-6 text-background-dark dark:text-background-light placeholder-background-dark/50 dark:placeholder-background-light/50 focus:ring-2 focus:ring-primary" placeholder="Adresse e-mail" type="email"/>
+<input class="w-full h-14 bg-white/50 dark:bg-black/20 border-0 rounded-full px-6 text-background-dark dark:text-background-light placeholder-background-dark/50 dark:placeholder-background-light/50 focus:ring-2 focus:ring-primary" placeholder="Mot de passe" type="password"/>
+<input class="w-full h-14 bg-white/50 dark:bg-black/20 border-0 rounded-full px-6 text-background-dark dark:text-background-light placeholder-background-dark/50 dark:placeholder-background-light/50 focus:ring-2 focus:ring-primary" placeholder="Confirmer le mot de passe" type="password"/>
+<div class="flex items-center space-x-3 pt-2">
+<input class="form-checkbox h-6 w-6 rounded border-2 border-background-dark/20 dark:border-background-light/20 bg-transparent checked:bg-primary checked:border-primary focus:ring-0 focus:ring-offset-0" id="terms" type="checkbox"/>
+<label class="text-sm text-background-dark dark:text-background-light" for="terms">J'accepte les <a class="font-bold underline" href="#">conditions d'utilisation</a></label>
+</div>
+</form>
+</div>
+</main>
+<div class="relative h-64 mt-8">
+<div class="absolute inset-x-0 bottom-0 h-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCPZCVIzLDxBYFSeQyzrFw4Zh2toQHrKE1xt5Es90gkKFBE7kfivh3BB8tBocx3SprNmhqh8m7tAi4ctnJ2JRK9S75z9bjKPddsemyn6SvkRDwZigFzgMLMDDF1VlhTcrYJKGFysalutQYjYOGa6QWoT2u55soU3mF2m9dXyT8MxTMrvPSurFTbm603qcUaBPpo_G0qxKNGn2-SjXR7NhfzW9O4RG4dOf7VF9XDFCTO84SuVAk6zlha4yRaSjQ24O0f-6uXl739Gi8'); transform: scaleX(-1);"></div>
+</div>
+<footer class="p-4 bg-background-light dark:bg-background-dark sticky bottom-0">
+<button class="w-full bg-primary text-white font-bold h-14 rounded-full shadow-lg shadow-primary/30">
+                S'inscrire
+            </button>
+<p class="text-center text-sm mt-4 text-background-dark dark:text-background-light">
+                Vous avez déjà un compte ? <a class="font-bold text-primary" href="#">Se connecter</a>
+</p>
+</footer>
+</div>
+
+</body></html>

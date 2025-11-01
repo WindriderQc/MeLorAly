@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c98d1d",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#211b11",
+                    },
+                    fontFamily: {
+                        "display": ["Epilogue"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex flex-col min-h-screen w-full justify-between group/design-root overflow-x-hidden">
+<div class="flex flex-col justify-start">
+<div class="w-full h-[50vh] bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCH-YZAz4r2C0jYlbcERpjE-ouILYt0tYRmaZmwRRue15ojT6vFxKPcCE3hxLwektIhpbNdcd_-MuxE3x61MO4pLUtqYUi1dYDyvNqMjnCnbsenyK0BCZD2MHjNi52lBOdQTdhbACtlDOifz8P9oOPL4bBvYZnbJhGQr-vH_2f2YGclRTECfd1rPIfu7OYB1-P6QXuPniPgPPzePG3kWx8omLWDAvAKr0fAZGeApTJxsPr9NGjawXfMT7Tar6_VycD82zbpeEH-kW8");'></div>
+<div class="px-6 py-8 text-center space-y-4">
+<h2 class="text-3xl font-bold text-background-dark dark:text-background-light leading-tight">Bienvenue dans notre espace familial</h2>
+<p class="text-base font-normal text-background-dark/80 dark:text-background-light/80 leading-relaxed">
+                    Nous sommes ravis de vous accompagner dans l'aventure de l'enfance, de l'apprentissage et du partage en famille.
+                </p>
+</div>
+</div>
+<div class="px-6 py-6 sticky bottom-0 bg-background-light dark:bg-background-dark">
+<button class="w-full h-14 px-5 bg-primary text-background-dark dark:text-background-dark text-base font-bold leading-normal rounded-full transition-transform hover:scale-105 active:scale-95">
+<span class="truncate">Commencer</span>
+</button>
+</div>
+</div>
+
+</body></html>
