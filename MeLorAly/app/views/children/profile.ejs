@@ -1,0 +1,175 @@
+<% const birthDateDisplay = child.birth_date ? new Date(child.birth_date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) : null; %>
+<div class="min-h-screen pb-24" style="background: var(--color-bg);">
+    <div class="px-6 py-12 text-white" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);">
+        <div class="max-w-5xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div class="flex items-center gap-5">
+                <% if (child.avatar_url) { %>
+                    <img src="<%= child.avatar_url %>" alt="Photo de <%= child.name %>" class="w-24 h-24 rounded-full object-cover border-4 border-white/30 shadow-lg">
+                <% } else { %>
+                    <div class="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold" style="background: rgba(255, 255, 255, 0.2); color: var(--color-on-primary);">
+                        <%= child.name.charAt(0) %>
+                    </div>
+                <% } %>
+                <div>
+                    <div class="flex items-center gap-3 mb-2 text-sm text-white/80">
+                        <a href="/family/<%= child.family_id %>" class="inline-flex items-center gap-1 px-3 py-1 rounded-full" style="background: rgba(255, 255, 255, 0.18);">
+                            <span class="material-symbols-outlined text-base">family_restroom</span>
+                            <span class="font-medium"><%= child.family?.name || 'Famille' %></span>
+                        </a>
+                    </div>
+                    <h1 class="text-4xl font-black leading-tight"><%= child.name %></h1>
+                    <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-white/80">
+                        <% if (child.age !== null) { %>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base">celebration</span>
+                                <span><%= child.age %> an<%= child.age > 1 ? 's' : '' %></span>
+                            </div>
+                        <% } %>
+                        <% if (birthDateDisplay) { %>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base">cake</span>
+                                <span>Né(e) le <%= birthDateDisplay %></span>
+                            </div>
+                        <% } %>
+                        <% if (child.grade) { %>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base">school</span>
+                                <span><%= child.grade %></span>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/children/<%= child.id %>/edit" class="px-5 py-3 rounded-full font-semibold shadow-card" style="background: var(--color-on-primary); color: var(--color-primary);">
+                    <span class="material-symbols-outlined align-middle text-base mr-1">edit</span>
+                    Modifier le profil
+                </a>
+                <% if (child.membershipRole === 'admin') { %>
+                    <button id="delete-child" class="px-4 py-3 rounded-full font-semibold flex items-center gap-2" style="background: rgba(0, 0, 0, 0.2); color: var(--color-on-primary);">
+                        <span class="material-symbols-outlined text-base">delete</span>
+                        Supprimer
+                    </button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-6 -mt-12 space-y-6">
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 space-y-6">
+                <section class="bg-white rounded-2xl shadow-card p-6">
+                    <h2 class="text-2xl font-black mb-4" style="color: var(--color-text);">Résumé</h2>
+                    <div class="space-y-4 text-sm" style="color: var(--color-muted);">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-base" style="color: var(--color-primary);">info</span>
+                            <p>Ce profil enfant est partagé avec la famille <strong style="color: var(--color-text);"><%= child.family?.name || '' %></strong>. Utilisez les actions ci-dessous pour mettre à jour ses informations ou suivre sa scolarité.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-base" style="color: var(--color-primary);">calendar_month</span>
+                            <% if (birthDateDisplay) { %>
+                                <p>Date d'anniversaire : <strong style="color: var(--color-text);"><%= birthDateDisplay %></strong>.</p>
+                            <% } else { %>
+                                <p>Ajoutez sa date de naissance pour personnaliser les recommandations éducatives.</p>
+                            <% } %>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-base" style="color: var(--color-primary);">insights</span>
+                            <% if (child.grade) { %>
+                                <p>Niveau scolaire actuel : <strong style="color: var(--color-text);"><%= child.grade %></strong>.</p>
+                            <% } else { %>
+                                <p>Indiquez son niveau scolaire pour recevoir des ressources adaptées.</p>
+                            <% } %>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-black" style="color: var(--color-text);">Journal familial</h2>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold" style="background: var(--color-primary-50); color: var(--color-primary);">Bientôt</span>
+                    </div>
+                    <p class="text-sm" style="color: var(--color-muted);">Nous préparons un espace pour suivre les progrès, les activités et les moments importants de <%= child.name %>. Restez connecté·e !</p>
+                </section>
+            </div>
+
+            <aside class="space-y-6">
+                <section class="bg-white rounded-2xl shadow-card p-6">
+                    <h2 class="text-lg font-black mb-4" style="color: var(--color-text);">Photo de profil</h2>
+                    <form action="/children/<%= child.id %>/photo" method="POST" enctype="multipart/form-data" class="space-y-4" id="photo-upload-form">
+                        <div class="flex items-center gap-3">
+                            <% if (child.avatar_url) { %>
+                                <img src="<%= child.avatar_url %>" alt="Photo de <%= child.name %>" class="w-16 h-16 rounded-full object-cover border" style="border-color: var(--color-border);">
+                            <% } else { %>
+                                <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background: var(--color-primary-50); color: var(--color-primary);">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                            <% } %>
+                            <div class="flex-1">
+                                <label for="child-photo" class="block text-sm font-medium mb-2" style="color: var(--color-muted);">Téléverser une nouvelle photo</label>
+                                <input type="file" id="child-photo" name="photo" accept="image/*" class="w-full text-sm" style="color: var(--color-text);">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-2 rounded-full font-semibold" style="background: var(--color-primary); color: var(--color-on-primary);">
+                            Mettre à jour la photo
+                        </button>
+                    </form>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-card p-6">
+                    <h2 class="text-lg font-black mb-4" style="color: var(--color-text);">Actions rapides</h2>
+                    <div class="space-y-3 text-sm">
+                        <a href="/children/<%= child.id %>/edit" class="flex items-center gap-2 px-4 py-3 rounded-xl" style="background: var(--color-primary-50); color: var(--color-primary);">
+                            <span class="material-symbols-outlined text-base">edit_square</span>
+                            <span>Modifier les informations</span>
+                        </a>
+                        <a href="/family/<%= child.family_id %>" class="flex items-center gap-2 px-4 py-3 rounded-xl" style="background: var(--color-secondary-50); color: var(--color-secondary);">
+                            <span class="material-symbols-outlined text-base">group</span>
+                            <span>Voir la famille</span>
+                        </a>
+                        <a href="/education" class="flex items-center gap-2 px-4 py-3 rounded-xl" style="background: var(--color-info); color: var(--color-on-info);">
+                            <span class="material-symbols-outlined text-base">lightbulb</span>
+                            <span>Ressources éducatives</span>
+                        </a>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deleteButton = document.getElementById('delete-child');
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async () => {
+            if (!confirm('Êtes-vous certain·e de vouloir supprimer ce profil enfant ?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/children/<%= child.id %>', {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    if (result.redirect) {
+                        window.location.href = result.redirect;
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    alert(result.message || "Impossible de supprimer cet enfant." );
+                }
+            } catch (error) {
+                console.error('Erreur lors de la suppression de l\'enfant:', error);
+                alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+            }
+        });
+    }
+</script>

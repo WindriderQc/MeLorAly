@@ -78,6 +78,7 @@ const setCsrfToken = (req, res, next) => {
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 const familyRoutes = require('./routes/family');
+const childrenRoutes = require('./routes/children');
 const onboardingRoutes = require('./routes/onboarding');
 const messagesRoutes = require('./routes/messages');
 const educationRoutes = require('./routes/education');
@@ -87,6 +88,7 @@ const supportRoutes = require('./routes/support');
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/family', familyRoutes);
+app.use('/children', childrenRoutes);
 app.use('/onboarding', csrfProtection, setCsrfToken, onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
 app.use('/education', educationRoutes);
