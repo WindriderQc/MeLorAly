@@ -60,26 +60,30 @@ app.use(['/onboarding', '/family', '/children', '/profile'], sensitivePostLimite
 app.set('trust proxy', 1);
 
 // Session configuration
+const isProduction = process.env.NODE_ENV === 'production';
+
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'your-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
   name: 'meloraly.sid', // Custom session cookie name
+  proxy: true, // Trust the reverse proxy
   cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     httpOnly: true, // Prevent XSS attacks
     sameSite: 'lax', // CSRF protection, works with redirects
-    secure: false, // Default for development
+    secure: 'auto', // Auto-detect based on X-Forwarded-Proto header
     path: '/', // Ensure cookie is sent on all paths
   }
 };
 
-// Production-specific cookie settings
-if (process.env.NODE_ENV === 'production') {
-  sessionConfig.cookie.secure = true; // Require HTTPS
-  // Don't set domain - let it default to current host
-  // Keep sameSite as 'lax' to allow POST redirects
-}
+console.log(`[SESSION] Initializing session middleware (NODE_ENV: ${process.env.NODE_ENV})`);
+console.log(`[SESSION] Cookie config:`, {
+  secure: sessionConfig.cookie.secure,
+  sameSite: sessionConfig.cookie.sameSite,
+  httpOnly: sessionConfig.cookie.httpOnly,
+  name: sessionConfig.name
+});
 
 app.use(session(sessionConfig));
 
