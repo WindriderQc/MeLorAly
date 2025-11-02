@@ -1,0 +1,242 @@
+<div class="min-h-screen bg-background-light pb-24">
+    <div class="bg-gradient-to-br <%= activity.gradient %> text-gray-900 px-6 py-8 rounded-b-3xl">
+        <div class="max-w-5xl mx-auto">
+            <a href="/education" class="inline-flex items-center gap-2 text-sm font-bold text-gray-900 mb-6">
+                <span class="material-symbols-outlined text-base">arrow_back</span>
+                Retour aux ressources
+            </a>
+            <div class="bg-white/80 backdrop-blur shadow-lg rounded-3xl p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-3xl text-primary filled"><%= activity.icon %></span>
+                        </div>
+                        <div>
+                            <span class="inline-flex gap-2 flex-wrap mb-2">
+                                <% activity.ageRanges.forEach(range => { %>
+                                    <span class="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wide">
+                                        <%= range %>
+                                    </span>
+                                <% }); %>
+                            </span>
+                            <h1 class="text-3xl font-black text-gray-900 mb-2"><%= activity.title %></h1>
+                            <p class="text-gray-600 max-w-2xl"><%= activity.summary %></p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900 text-white rounded-2xl px-6 py-4 text-center">
+                        <span class="block text-xs uppercase tracking-wide text-gray-300">Durée estimée</span>
+                        <span class="text-2xl font-black"><%= activity.durationMinutes %> min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-6 py-10">
+        <div id="activity-flash" class="hidden mb-6"></div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 space-y-6">
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">menu_book</span>
+                        Description
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed"><%= activity.description %></p>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600">flag</span>
+                        Objectifs d'apprentissage
+                    </h2>
+                    <ul class="space-y-2">
+                        <% activity.learningGoals.forEach(goal => { %>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-green-500 text-base">check_circle</span>
+                                <span class="text-gray-700"><%= goal %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">format_list_numbered</span>
+                        Étapes
+                    </h2>
+                    <ol class="space-y-3 pl-5">
+                        <% activity.steps.forEach((step, index) => { %>
+                            <li class="text-gray-700 leading-relaxed list-decimal">
+                                <%= step %>
+                            </li>
+                        <% }); %>
+                    </ol>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-purple-600">tips_and_updates</span>
+                        Astuce
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed"><%= activity.tips %></p>
+                </section>
+            </div>
+
+            <aside class="space-y-6">
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">task_alt</span>
+                        Suivi de progression
+                    </h2>
+
+                    <% if (children.length === 0) { %>
+                        <p class="text-sm text-gray-600">
+                            Ajoutez un enfant dans votre espace famille pour suivre sa progression sur cette activité.
+                        </p>
+                    <% } else { %>
+                        <div class="space-y-4">
+                            <% children.forEach(child => {
+                                const isCompleted = completedChildIds.includes(child.id);
+                            %>
+                                <div class="border border-gray-200 rounded-xl p-4 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="font-semibold text-gray-900"><%= child.name %></p>
+                                        <% if (child.grade) { %>
+                                            <p class="text-xs text-gray-500">Classe : <%= child.grade %></p>
+                                        <% } %>
+                                    </div>
+                                    <button type="button"
+                                            class="complete-btn px-4 py-2 rounded-xl font-bold text-sm transition flex items-center gap-2 <%= isCompleted ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-primary text-gray-900' %>"
+                                            data-child-id="<%= child.id %>"
+                                            data-completed="<%= isCompleted %>"
+                                            data-activity-id="<%= activity.id %>">
+                                        <span class="material-symbols-outlined text-base <%= isCompleted ? 'filled' : '' %>">
+                                            <%= isCompleted ? 'task_alt' : 'play_arrow' %>
+                                        </span>
+                                        <span><%= isCompleted ? 'Terminé' : 'Marquer comme fait' %></span>
+                                    </button>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } %>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600">handyman</span>
+                        Matériel nécessaire
+                    </h2>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <% activity.materials.forEach(material => { %>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-sm text-blue-500">check</span>
+                                <span><%= material %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+                </section>
+
+                <section class="bg-white rounded-2xl shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-orange-500">local_offer</span>
+                        Compétences mobilisées
+                    </h2>
+                    <div class="flex flex-wrap gap-2">
+                        <% activity.skillTags.forEach(tag => { %>
+                            <span class="px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold uppercase tracking-wide">
+                                <%= tag %>
+                            </span>
+                        <% }); %>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    const toastContainer = document.getElementById('activity-flash');
+
+    function showToast(type, message) {
+        toastContainer.className = '';
+        toastContainer.classList.add('mb-6');
+
+        const baseClasses = 'rounded-xl px-4 py-3 flex items-start gap-3 shadow-sm';
+        if (type === 'success') {
+            toastContainer.classList.add(...(baseClasses + ' bg-green-50 border border-green-200 text-green-800').split(' '));
+        } else {
+            toastContainer.classList.add(...(baseClasses + ' bg-red-50 border border-red-200 text-red-800').split(' '));
+        }
+
+        toastContainer.innerHTML = `
+            <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : 'error'}</span>
+            <span>${message}</span>
+            <button type="button" class="ml-auto text-current" aria-label="Fermer la notification">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        `;
+
+        toastContainer.classList.remove('hidden');
+
+        const closeBtn = toastContainer.querySelector('button');
+        closeBtn?.addEventListener('click', () => toastContainer.classList.add('hidden'));
+    }
+
+    document.querySelectorAll('.complete-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const childId = button.dataset.childId;
+            const activityId = button.dataset.activityId;
+            const currentlyCompleted = button.dataset.completed === 'true';
+
+            if (!csrfToken) {
+                showToast('error', 'CSRF token manquant, veuillez actualiser la page.');
+                return;
+            }
+
+            button.disabled = true;
+            button.classList.add('opacity-75');
+
+            try {
+                const response = await fetch(`/education/activity/${activityId}/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({
+                        childId,
+                        completed: !currentlyCompleted
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || 'Impossible de mettre à jour la progression.');
+                }
+
+                button.dataset.completed = (!currentlyCompleted).toString();
+                if (!currentlyCompleted) {
+                    button.classList.remove('bg-primary', 'text-gray-900');
+                    button.classList.add('bg-green-100', 'text-green-700', 'border', 'border-green-200');
+                    button.innerHTML = '<span class="material-symbols-outlined text-base filled">task_alt</span><span>Terminé</span>';
+                } else {
+                    button.classList.remove('bg-green-100', 'text-green-700', 'border', 'border-green-200');
+                    button.classList.add('bg-primary', 'text-gray-900');
+                    button.innerHTML = '<span class="material-symbols-outlined text-base">play_arrow</span><span>Marquer comme fait</span>';
+                }
+
+                showToast('success', result.message);
+            } catch (error) {
+                console.error(error);
+                showToast('error', error.message || 'Erreur interne inattendue.');
+            } finally {
+                button.disabled = false;
+                button.classList.remove('opacity-75');
+            }
+        });
+    });
+})();
+</script>

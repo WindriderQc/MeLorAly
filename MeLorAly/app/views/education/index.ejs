@@ -15,185 +15,88 @@
         <!-- Age Filter Tabs -->
         <div class="bg-white rounded-2xl shadow-sm p-4 mb-6">
             <div class="flex gap-2 overflow-x-auto">
-                <button onclick="filterAge('all')" class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap bg-primary text-gray-900">
-                    Tous les âges
-                </button>
-                <button onclick="filterAge('0-3')" class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    0-3 ans
-                </button>
-                <button onclick="filterAge('3-6')" class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    3-6 ans
-                </button>
-                <button onclick="filterAge('6-12')" class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    6-12 ans
-                </button>
-                <button onclick="filterAge('12+')" class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap bg-gray-100 text-gray-700 hover:bg-gray-200">
-                    12+ ans
-                </button>
+                <% ageFilters.forEach((filter, index) => { %>
+                    <button type="button"
+                            onclick="filterAge('<%= filter.id %>', event)"
+                            class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap transition <%= index === 0 ? 'bg-primary text-gray-900' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <%= filter.label %>
+                    </button>
+                <% }); %>
             </div>
         </div>
 
         <div class="grid lg:grid-cols-3 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Soutien Pré-scolaire -->
-                <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-black text-gray-900 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-blue-600 filled">toys</span>
-                            Soutien pré-scolaire
-                        </h2>
-                        <a href="/education/preschool" class="text-sm font-bold text-primary hover:underline">Voir tout</a>
+                <% categories.forEach(category => { 
+                    const categoryActivities = activitiesByCategory[category.id] || [];
+                    if (categoryActivities.length === 0) return;
+                %>
+                    <section data-category-section>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-black text-gray-900 flex items-center gap-2">
+                                <span class="material-symbols-outlined <%= category.iconColorClass %> filled"><%= category.icon %></span>
+                                <%= category.name %>
+                            </h2>
+                            <a href="<%= category.viewAllPath %>" class="text-sm font-bold text-primary hover:underline">Voir tout</a>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <% categoryActivities.forEach(activity => {
+                                const completedChildren = completionMap[activity.id] || [];
+                                const isCompleted = completedChildren.length > 0;
+                            %>
+                                <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition group flex flex-col"
+                                         data-age-groups="<%= activity.ageRanges.join(',') %>"
+                                         data-activity-id="<%= activity.id %>">
+                                    <div class="h-40 bg-gradient-to-br <%= activity.gradient %> flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-6xl"><%= activity.icon %></span>
+                                    </div>
+                                    <div class="p-5 flex flex-col gap-3 flex-1">
+                                        <span class="inline-block <%= activity.badgeClass %> px-3 py-1 rounded-full text-xs font-bold">
+                                            <%= activity.ageRanges.join(' · ') %>
+                                        </span>
+                                        <h3 class="font-bold text-gray-900 text-lg"><%= activity.title %></h3>
+                                        <p class="text-sm text-gray-600 flex-1"><%= activity.summary %></p>
+                                        <div class="flex items-center justify-between text-xs text-gray-500">
+                                            <span class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                                <%= activity.durationMinutes %> min
+                                            </span>
+                                            <% if (isCompleted) { %>
+                                                <span class="flex items-center gap-1 text-green-600 font-semibold">
+                                                    <span class="material-symbols-outlined text-sm filled">task_alt</span>
+                                                    Terminé
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                        <a href="/education/activity/<%= activity.id %>"
+                                           class="w-full bg-primary text-gray-900 px-4 py-2 rounded-xl font-bold hover:shadow-lg transition text-center">
+                                            Voir l'activité
+                                        </a>
+                                    </div>
+                                </article>
+                            <% }); %>
+                        </div>
+                    </section>
+                <% }); %>
+
+                <div id="activity-empty-state" class="hidden">
+                    <div class="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center">
+                        <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">lightbulb</span>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Aucune activité pour cet âge</h3>
+                        <p class="text-sm text-gray-600">Sélectionnez un autre filtre d'âge pour découvrir davantage de ressources.</p>
                     </div>
-
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <!-- Activity Card -->
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition group">
-                            <div class="h-40 bg-gradient-to-br from-blue-200 to-purple-200 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">palette</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    3-6 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Coloriage créatif</h3>
-                                <p class="text-sm text-gray-600 mb-4">Développez la créativité et la motricité fine avec des activités de coloriage ludiques</p>
-                                <button class="w-full bg-blue-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition group">
-                            <div class="h-40 bg-gradient-to-br from-green-200 to-teal-200 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">abc</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    3-6 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Apprentissage des lettres</h3>
-                                <p class="text-sm text-gray-600 mb-4">Découverte ludique de l'alphabet et des premiers sons</p>
-                                <button class="w-full bg-green-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition group">
-                            <div class="h-40 bg-gradient-to-br from-yellow-200 to-orange-200 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">calculate</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    3-6 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Compter et dénombrer</h3>
-                                <p class="text-sm text-gray-600 mb-4">Initiation aux nombres et aux premières opérations</p>
-                                <button class="w-full bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition group">
-                            <div class="h-40 bg-gradient-to-br from-pink-200 to-rose-200 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">music_note</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    0-6 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Comptines et musique</h3>
-                                <p class="text-sm text-gray-600 mb-4">Éveil musical avec des chansons et comptines</p>
-                                <button class="w-full bg-pink-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Soutien Scolaire -->
-                <section class="mt-8">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-black text-gray-900 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-purple-600 filled">menu_book</span>
-                            Soutien scolaire
-                        </h2>
-                        <a href="/education/school" class="text-sm font-bold text-primary hover:underline">Voir tout</a>
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition">
-                            <div class="h-40 bg-gradient-to-br from-indigo-200 to-blue-300 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">import_contacts</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    6-12 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Lecture et compréhension</h3>
-                                <p class="text-sm text-gray-600 mb-4">Exercices de lecture et questions de compréhension</p>
-                                <button class="w-full bg-indigo-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition">
-                            <div class="h-40 bg-gradient-to-br from-red-200 to-orange-300 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">functions</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    6-12 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Mathématiques</h3>
-                                <p class="text-sm text-gray-600 mb-4">Exercices de calcul, géométrie et problèmes</p>
-                                <button class="w-full bg-red-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition">
-                            <div class="h-40 bg-gradient-to-br from-teal-200 to-green-300 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">science</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    6-12 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Sciences et découvertes</h3>
-                                <p class="text-sm text-gray-600 mb-4">Expériences et apprentissages scientifiques</p>
-                                <button class="w-full bg-teal-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition">
-                            <div class="h-40 bg-gradient-to-br from-violet-200 to-purple-300 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-6xl">history_edu</span>
-                            </div>
-                            <div class="p-5">
-                                <span class="inline-block bg-violet-100 text-violet-700 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                                    6-12 ans
-                                </span>
-                                <h3 class="font-bold text-gray-900 text-lg mb-2">Histoire et géographie</h3>
-                                <p class="text-sm text-gray-600 mb-4">Découverte du monde et de son histoire</p>
-                                <button class="w-full bg-violet-500 text-white px-4 py-2 rounded-xl font-bold hover:shadow-lg transition">
-                                    Commencer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                </div>
             </div>
 
             <!-- Sidebar -->
             <div class="space-y-6">
+                <% 
+                    const completionPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
+                    const hoursSpent = Math.floor((progress.minutes || 0) / 60);
+                    const minutesSpent = (progress.minutes || 0) % 60;
+                %>
                 <!-- Progress Card -->
                 <div class="bg-white rounded-2xl shadow-sm p-6">
                     <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -204,19 +107,25 @@
                         <div>
                             <div class="flex justify-between text-sm mb-2">
                                 <span class="text-gray-600">Activités complétées</span>
-                                <span class="font-bold text-gray-900">12/20</span>
+                                <span class="font-bold text-gray-900"><%= progress.completed %>/<%= progress.total %></span>
                             </div>
                             <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 rounded-full" style="width: 60%"></div>
+                                <div class="h-full bg-green-500 rounded-full" style="width: <%= completionPercent %>%"></div>
                             </div>
                         </div>
                         
                         <div>
                             <div class="flex justify-between text-sm mb-2">
                                 <span class="text-gray-600">Temps d'apprentissage</span>
-                                <span class="font-bold text-gray-900">2h 30min</span>
+                                <span class="font-bold text-gray-900">
+                                    <% if (hoursSpent > 0) { %>
+                                        <%= hoursSpent %>h <%= minutesSpent %>min
+                                    <% } else { %>
+                                        <%= minutesSpent %> min
+                                    <% } %>
+                                </span>
                             </div>
-                            <div class="text-xs text-gray-500">Cette semaine</div>
+                            <div class="text-xs text-gray-500">Basé sur les activités complétées</div>
                         </div>
                     </div>
                 </div>
@@ -228,11 +137,18 @@
                         Recommandé pour vous
                     </h3>
                     <div class="space-y-3">
-                        <div class="bg-white rounded-xl p-4">
-                            <h4 class="font-bold text-gray-900 text-sm mb-1">Jeux de logique</h4>
-                            <p class="text-xs text-gray-600 mb-2">Développer le raisonnement</p>
-                            <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full font-bold">Nouveau</span>
-                        </div>
+                        <% recommendedActivities.slice(0, 3).forEach(activity => { %>
+                            <div class="bg-white rounded-xl p-4">
+                                <h4 class="font-bold text-gray-900 text-sm mb-1"><%= activity.title %></h4>
+                                <p class="text-xs text-gray-600 mb-2"><%= activity.summary %></p>
+                                <a href="/education/activity/<%= activity.id %>" class="text-xs font-bold text-primary hover:underline">
+                                    Ouvrir l'activité
+                                </a>
+                            </div>
+                        <% }); %>
+                        <% if (recommendedActivities.length === 0) { %>
+                            <p class="text-sm text-gray-600">Complétez des activités pour recevoir des recommandations personnalisées.</p>
+                        <% } %>
                     </div>
                 </div>
 
@@ -245,7 +161,7 @@
                         <div>
                             <h3 class="font-bold text-gray-900 mb-1">Conseil</h3>
                             <p class="text-sm text-gray-600">
-                                Pratiquez 15-20 minutes par jour pour des résultats optimaux!
+                                Programmez une session courte chaque jour pour garder le rythme. 15 minutes suffisent pour progresser régulièrement.
                             </p>
                         </div>
                     </div>
@@ -256,16 +172,43 @@
 </div>
 
 <script>
-function filterAge(age) {
-    console.log('Filter by age:', age);
-    // TODO: Implement age filtering
-    
-    // Update active button
-    document.querySelectorAll('.age-filter').forEach(btn => {
-        btn.classList.remove('bg-primary', 'text-white');
-        btn.classList.add('bg-gray-100', 'text-gray-700');
+function filterAge(age, event) {
+    const cards = document.querySelectorAll('[data-age-groups]');
+    const buttons = document.querySelectorAll('.age-filter');
+    const emptyState = document.getElementById('activity-empty-state');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const groups = card.dataset.ageGroups.split(',');
+        const shouldShow = age === 'all' || groups.includes(age);
+        card.classList.toggle('hidden', !shouldShow);
+        if (shouldShow) {
+            visibleCount += 1;
+        }
     });
-    event.target.classList.remove('bg-gray-100', 'text-gray-700');
-    event.target.classList.add('bg-primary', 'text-white');
+
+    document.querySelectorAll('[data-category-section]').forEach(section => {
+        const visibleCards = section.querySelectorAll('[data-age-groups]:not(.hidden)');
+        section.classList.toggle('hidden', visibleCards.length === 0);
+    });
+
+    buttons.forEach(button => {
+        button.classList.remove('bg-primary', 'text-gray-900');
+        button.classList.add('bg-gray-100', 'text-gray-700');
+    });
+
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.remove('bg-gray-100', 'text-gray-700');
+        event.currentTarget.classList.add('bg-primary', 'text-gray-900');
+    } else if (buttons.length > 0) {
+        buttons[0].classList.remove('bg-gray-100', 'text-gray-700');
+        buttons[0].classList.add('bg-primary', 'text-gray-900');
+    }
+
+    emptyState.classList.toggle('hidden', visibleCount > 0);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    filterAge('all');
+});
 </script>
