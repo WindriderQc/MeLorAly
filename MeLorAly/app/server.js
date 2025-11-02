@@ -56,9 +56,8 @@ app.use('/auth', authLimiter);
 app.use(['/onboarding', '/family', '/children', '/profile'], sensitivePostLimiter);
 
 // Trust proxy for production (behind reverse proxy/load balancer)
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1);
-}
+// This MUST be set before session middleware
+app.set('trust proxy', 1);
 
 // Session configuration
 const sessionConfig = {
@@ -68,14 +67,15 @@ const sessionConfig = {
   cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     httpOnly: true, // Prevent XSS attacks
-    sameSite: 'lax', // CSRF protection
+    sameSite: 'lax', // CSRF protection, works with redirects
+    secure: false, // Default for development
   }
 };
 
 // Production-specific cookie settings
 if (process.env.NODE_ENV === 'production') {
   sessionConfig.cookie.secure = true; // Require HTTPS
-  sessionConfig.cookie.sameSite = 'strict'; // Stricter CSRF protection
+  // Keep sameSite as 'lax' to allow POST redirects
 }
 
 app.use(session(sessionConfig));
