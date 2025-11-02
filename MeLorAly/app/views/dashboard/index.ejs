@@ -13,7 +13,7 @@
                 <% } %>
                 <div>
                     <h1 class="text-2xl font-black">
-                        Bonjour, <%= profile ? profile.first_name : 'Bienvenue' %>! 👋
+                        Bonjour, <%= profile && profile.full_name ? profile.full_name.split(' ')[0] : 'Bienvenue' %>! 👋
                     </h1>
                     <p class="text-white/90">Voici un aperçu de votre famille</p>
                 </div>
@@ -28,32 +28,32 @@
                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <span class="material-symbols-outlined text-blue-600 filled">group</span>
                 </div>
-                <div class="text-2xl font-bold text-gray-900"><%= families.length %></div>
-                <div class="text-xs text-gray-500">Familles</div>
+                <div class="text-2xl font-bold text-gray-900"><%= stats.totalMembers %></div>
+                <div class="text-xs text-gray-500">Membres</div>
             </div>
             
             <div class="bg-white rounded-2xl shadow-lg p-4 text-center">
                 <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <span class="material-symbols-outlined text-green-600 filled">child_care</span>
                 </div>
-                <div class="text-2xl font-bold text-gray-900"><%= children.length %></div>
+                <div class="text-2xl font-bold text-gray-900"><%= stats.totalChildren %></div>
                 <div class="text-xs text-gray-500">Enfants</div>
             </div>
             
             <div class="bg-white rounded-2xl shadow-lg p-4 text-center">
                 <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                    <span class="material-symbols-outlined text-purple-600 filled">chat</span>
+                    <span class="material-symbols-outlined text-purple-600 filled">mail</span>
                 </div>
-                <div class="text-2xl font-bold text-gray-900"><%= notifications.filter(n => !n.read).length %></div>
-                <div class="text-xs text-gray-500">Messages</div>
+                <div class="text-2xl font-bold text-gray-900"><%= stats.pendingInvitations %></div>
+                <div class="text-xs text-gray-500">Invitations</div>
             </div>
             
             <div class="bg-white rounded-2xl shadow-lg p-4 text-center">
                 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                    <span class="material-symbols-outlined text-primary filled">event</span>
+                    <span class="material-symbols-outlined text-primary filled">home</span>
                 </div>
-                <div class="text-2xl font-bold text-gray-900">0</div>
-                <div class="text-xs text-gray-500">Événements</div>
+                <div class="text-2xl font-bold text-gray-900"><%= stats.totalFamilies %></div>
+                <div class="text-xs text-gray-500"><%= stats.totalFamilies > 1 ? 'Familles' : 'Famille' %></div>
             </div>
         </div>
 
@@ -89,7 +89,7 @@
                         <div class="grid md:grid-cols-2 gap-4">
                             <% families.forEach(familyMember => { %>
                                 <div class="bg-white rounded-2xl shadow-sm p-5 hover:shadow-lg transition">
-                                    <div class="flex items-center gap-3 mb-4">
+                                    <div class="flex items-center gap-3 mb-3">
                                         <% if (familyMember.families.avatar_url) { %>
                                             <img src="<%= familyMember.families.avatar_url %>" alt="Avatar famille" class="w-14 h-14 rounded-2xl object-cover">
                                         <% } else { %>
@@ -99,12 +99,39 @@
                                         <% } %>
                                         <div class="flex-grow">
                                             <h3 class="font-bold text-gray-900"><%= familyMember.families.name %></h3>
-                                            <p class="text-sm text-gray-500 capitalize">
-                                                <span class="material-symbols-outlined text-xs align-middle">badge</span>
+                                            <p class="text-sm text-gray-500 capitalize flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-xs">badge</span>
                                                 <%= familyMember.role %>
                                             </p>
                                         </div>
                                     </div>
+                                    
+                                    <!-- Family members avatars -->
+                                    <% if (familyMember.familyMembers && familyMember.familyMembers.length > 0) { %>
+                                        <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
+                                            <div class="flex -space-x-2">
+                                                <% familyMember.familyMembers.slice(0, 4).forEach(member => { %>
+                                                    <% if (member.profiles && member.profiles.avatar_url) { %>
+                                                        <img src="<%= member.profiles.avatar_url %>" 
+                                                             alt="<%= member.profiles.full_name || 'Membre' %>"
+                                                             class="w-8 h-8 rounded-full border-2 border-white object-cover"
+                                                             title="<%= member.profiles.full_name || 'Membre' %>">
+                                                    <% } else { %>
+                                                        <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center"
+                                                             title="<%= member.profiles ? member.profiles.full_name : 'Membre' %>">
+                                                            <span class="material-symbols-outlined text-xs text-gray-600">person</span>
+                                                        </div>
+                                                    <% } %>
+                                                <% }); %>
+                                                <% if (familyMember.familyMembers.length > 4) { %>
+                                                    <div class="w-8 h-8 rounded-full border-2 border-white bg-primary/10 flex items-center justify-center">
+                                                        <span class="text-xs font-bold text-primary">+<%= familyMember.familyMembers.length - 4 %></span>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                            <span class="text-xs text-gray-500"><%= familyMember.memberCount %> membre<%= familyMember.memberCount > 1 ? 's' : '' %></span>
+                                        </div>
+                                    <% } %>
                                     
                                     <div class="flex gap-2">
                                         <a href="/family/<%= familyMember.families.id %>" 
@@ -145,7 +172,7 @@
 
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                             <% children.forEach(child => { %>
-                                <div class="bg-white rounded-2xl shadow-sm p-4 text-center hover:shadow-lg transition">
+                                <a href="/children/<%= child.id %>" class="bg-white rounded-2xl shadow-sm p-4 text-center hover:shadow-lg transition block">
                                     <% if (child.avatar_url) { %>
                                         <img src="<%= child.avatar_url %>" alt="<%= child.name %>" class="w-16 h-16 rounded-full mx-auto mb-3 object-cover">
                                     <% } else { %>
@@ -154,10 +181,13 @@
                                         </div>
                                     <% } %>
                                     <h3 class="font-bold text-gray-900 text-sm"><%= child.name %></h3>
-                                    <% if (child.grade) { %>
-                                        <p class="text-xs text-gray-500"><%= child.grade %></p>
+                                    <% if (child.age !== undefined && child.age !== null) { %>
+                                        <p class="text-xs text-gray-500"><%= child.age %> ans</p>
                                     <% } %>
-                                </div>
+                                    <% if (child.grade) { %>
+                                        <p class="text-xs text-gray-400"><%= child.grade %></p>
+                                    <% } %>
+                                </a>
                             <% }); %>
                         </div>
                     </div>
