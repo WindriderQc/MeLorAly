@@ -15,15 +15,153 @@
         <!-- Age Filter Tabs -->
         <div class="bg-white rounded-2xl shadow-sm p-4 mb-6">
             <div class="flex gap-2 overflow-x-auto">
-                <% ageFilters.forEach((filter, index) => { %>
+                <% ageFilters.forEach((filter, index) => { 
+                    const isActive = filter.id === defaultAgeFilter || (!defaultAgeFilter && index === 0);
+                %>
                     <button type="button"
+                            data-age-filter="<%= filter.id %>"
                             onclick="filterAge('<%= filter.id %>', event)"
-                            class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap transition <%= index === 0 ? 'bg-primary text-gray-900' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                            class="age-filter px-6 py-3 rounded-xl font-bold whitespace-nowrap transition <%= isActive ? 'bg-primary text-gray-900' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
                         <%= filter.label %>
                     </button>
                 <% }); %>
             </div>
         </div>
+
+        <% 
+            const formatDate = (iso) => {
+                if (!iso) return '';
+                try {
+                    return new Date(iso).toLocaleDateString('fr-FR', {
+                        weekday: 'short',
+                        day: '2-digit',
+                        month: 'short'
+                    });
+                } catch (error) {
+                    return iso;
+                }
+            };
+        %>
+
+        <% if (children.length > 0) { %>
+            <section class="mb-10 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-black text-gray-900 flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary filled text-3xl">task</span>
+                        Plans personnalisés
+                    </h2>
+                    <p class="text-sm text-gray-500 hidden md:block">
+                        Générez des séances adaptées à chaque enfant et téléchargez le plan au format agenda.
+                    </p>
+                </div>
+
+                <div class="grid gap-4 lg:grid-cols-2">
+                    <% children.forEach(profile => { 
+                        const plan = weeklyPlans[profile.child.id];
+                        const activeDays = (plan?.days || []).filter(day => day.activity);
+                    %>
+                        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col gap-5">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-900">Pour <%= profile.child.name %></h3>
+                                        <p class="text-sm text-gray-500">
+                                            <% if (profile.age !== null && profile.age !== undefined) { %>
+                                                <span class="font-medium text-gray-700"><%= profile.age %> ans</span>
+                                            <% } %>
+                                            <% if (profile.child.grade) { %>
+                                                • Niveau : <span class="font-medium text-gray-700"><%= profile.child.grade %></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                    <div class="text-right text-sm text-gray-600 space-y-1">
+                                        <div class="flex items-center justify-end gap-1 text-orange-500 font-semibold">
+                                            <span class="material-symbols-outlined text-base filled">local_fire_department</span>
+                                            Série en cours : <%= profile.metrics.currentStreak %> jour<%= profile.metrics.currentStreak > 1 ? 's' : '' %>
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            Record : <%= profile.metrics.longestStreak %> jour<%= profile.metrics.longestStreak > 1 ? 's' : '' %>
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            Activités complétées : <%= profile.totalCompletions %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-primary/5 rounded-2xl p-4 text-sm text-gray-700">
+                                    <p>
+                                        Prochaine session à partir du <span class="font-semibold text-gray-900"><%= formatDate(plan?.startDate) %></span>.
+                                        Les recommandations privilégient des activités non encore réalisées et variées.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <% if (activeDays.length === 0) { %>
+                                    <div class="border border-dashed border-gray-200 rounded-xl p-4 text-sm text-gray-500">
+                                        Aucune activité n'est recommandée pour le moment. Complétez une activité pour démarrer un plan personnalisé.
+                                    </div>
+                                <% } else { %>
+                                    <% activeDays.slice(0, 4).forEach(day => { %>
+                                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 rounded-xl border border-gray-100 p-4 hover:border-primary/40 transition">
+                                            <div>
+                                                <p class="text-xs uppercase tracking-wide text-gray-400 mb-1">
+                                                    <%= day.label %> • <%= formatDate(day.dateIso) %>
+                                                </p>
+                                                <p class="font-semibold text-gray-900"><%= day.activity.title %></p>
+                                                <p class="text-xs text-gray-500 mt-1">
+                                                    <span class="inline-flex items-center gap-1">
+                                                        <span class="material-symbols-outlined text-xs">schedule</span>
+                                                        <%= day.activity.durationMinutes %> min
+                                                    </span>
+                                                    <% if (day.activity.skillTags && day.activity.skillTags.length > 0) { %>
+                                                        • <%= day.activity.skillTags.slice(0, 2).join(', ') %>
+                                                        <% if (day.activity.skillTags.length > 2) { %>
+                                                            et plus
+                                                        <% } %>
+                                                    <% } %>
+                                                </p>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <% if (profile.completedActivityIds.has(day.activity.id)) { %>
+                                                    <span class="text-green-600 text-xs font-bold flex items-center gap-1">
+                                                        <span class="material-symbols-outlined text-base filled">task_alt</span>
+                                                        Déjà réalisé
+                                                    </span>
+                                                <% } %>
+                                                <a href="/education/activity/<%= day.activity.id %>"
+                                                   class="px-4 py-2 bg-primary text-gray-900 rounded-xl text-xs font-bold hover:shadow-lg transition">
+                                                    Voir l'activité
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } %>
+                            </div>
+
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-sm">
+                                <div class="text-xs text-gray-500">
+                                    Plan généré le <%= formatDate(plan?.generatedAt) %>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <a href="/education/plan/<%= profile.child.id %>/download"
+                                       class="inline-flex items-center gap-2 rounded-full border border-primary px-4 py-2 text-xs font-bold text-primary hover:bg-primary hover:text-gray-900 transition">
+                                        <span class="material-symbols-outlined text-base">download</span>
+                                        Télécharger le plan (.ics)
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </section>
+        <% } else { %>
+            <div class="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center mb-10">
+                <span class="material-symbols-outlined text-4xl text-gray-400 mb-2">family_restroom</span>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Ajoutez un enfant pour obtenir des plans personnalisés</h3>
+                <p class="text-sm text-gray-600">Rendez-vous dans l'espace Famille pour créer un profil enfant et débloquer la personnalisation.</p>
+            </div>
+        <% } %>
 
         <div class="grid lg:grid-cols-3 gap-6">
             <!-- Main Content -->
@@ -96,6 +234,8 @@
                     const completionPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
                     const hoursSpent = Math.floor((progress.minutes || 0) / 60);
                     const minutesSpent = (progress.minutes || 0) % 60;
+                    const currentStreak = progress.streak?.current || 0;
+                    const longestStreak = progress.streak?.longest || 0;
                 %>
                 <!-- Progress Card -->
                 <div class="bg-white rounded-2xl shadow-sm p-6">
@@ -126,6 +266,20 @@
                                 </span>
                             </div>
                             <div class="text-xs text-gray-500">Basé sur les activités complétées</div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-xl p-3">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-600 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-base text-orange-500 filled">local_fire_department</span>
+                                    Série la plus longue
+                                </span>
+                                <span class="font-bold text-gray-900"><%= longestStreak %> j</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs text-gray-500 mt-2">
+                                <span>Série actuelle</span>
+                                <span class="text-orange-600 font-semibold"><%= currentStreak %> j</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -197,18 +351,20 @@ function filterAge(age, event) {
         button.classList.add('bg-gray-100', 'text-gray-700');
     });
 
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.remove('bg-gray-100', 'text-gray-700');
-        event.currentTarget.classList.add('bg-primary', 'text-gray-900');
-    } else if (buttons.length > 0) {
-        buttons[0].classList.remove('bg-gray-100', 'text-gray-700');
-        buttons[0].classList.add('bg-primary', 'text-gray-900');
+    let targetButton = event?.currentTarget || Array.from(buttons).find(btn => btn.dataset.ageFilter === age);
+    if (!targetButton && buttons.length > 0) {
+        targetButton = buttons[0];
+    }
+    if (targetButton) {
+        targetButton.classList.remove('bg-gray-100', 'text-gray-700');
+        targetButton.classList.add('bg-primary', 'text-gray-900');
     }
 
     emptyState.classList.toggle('hidden', visibleCount > 0);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    filterAge('all');
+    const defaultAgeFilterValue = "<%= defaultAgeFilter || 'all' %>";
+    filterAge(defaultAgeFilterValue || 'all');
 });
 </script>

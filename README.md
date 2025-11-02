@@ -48,6 +48,9 @@ MeLorAly connects parents, children, and grandparents in a collaborative educati
 - Filtre d'âge instantané directement dans l'interface
 - Suivi des complétions par enfant (journalisé dans Supabase)
 - Comptabilisation automatique du temps d'apprentissage
+- Plans d'apprentissage hebdomadaires générés automatiquement par enfant
+- Recommandations personnalisées avec suivi des séries de progression
+- Export du plan au format calendrier (.ics) pour partager avec la famille
 
 ### ✅ Centre de notifications
 - Panneau latéral interactif depuis la barre de navigation

@@ -8,6 +8,12 @@ const {
   getActivityById,
   getAgeFilters
 } = require('../data/education-activities');
+const {
+  WEEK_DAYS,
+  buildChildProfiles,
+  compileGlobalRecommendations,
+  generateWeeklyPlanICS
+} = require('../services/educationPlanner');
 
 // Pre-computed helpers
 const activitiesByCategory = getActivitiesByCategory();
@@ -56,20 +62,38 @@ router.get('/', async (req, res) => {
       return sum + (activity?.durationMinutes || 0);
     }, 0);
 
-    const recommendedActivities = activities.filter(activity => activity.recommended);
+    const childProfiles = buildChildProfiles(children || [], completions || []);
+    const personalizedRecommendations = compileGlobalRecommendations(childProfiles, 6);
+
+    const streakSummary = childProfiles.reduce((acc, profile) => {
+      acc.longest = Math.max(acc.longest, profile.metrics.longestStreak);
+      acc.current = Math.max(acc.current, profile.metrics.currentStreak);
+      return acc;
+    }, { longest: 0, current: 0 });
+
+    const defaultAgeFilter = childProfiles[0]?.ageBuckets?.find(bucket => bucket !== 'all') || 'all';
+
+    const weeklyPlans = childProfiles.reduce((acc, profile) => {
+      acc[profile.child.id] = profile.weeklyPlan;
+      return acc;
+    }, {});
 
     res.render('education/index', {
       title: 'Ressources éducatives - MeLorAly',
       ageFilters,
       categories,
       activitiesByCategory,
-      children: children || [],
-      recommendedActivities,
+      children: childProfiles,
+      weeklyPlans,
+      weekLabels: WEEK_DAYS,
+      defaultAgeFilter,
+      recommendedActivities: personalizedRecommendations,
       completionMap,
       progress: {
         completed: completedActivityIds.size,
         total: activities.length,
-        minutes: totalMinutes
+        minutes: totalMinutes,
+        streak: streakSummary
       }
     });
   } catch (error) {
@@ -227,6 +251,74 @@ router.post('/activity/:id/complete', async (req, res) => {
       success: false,
       message: 'Erreur lors de l\'enregistrement'
     });
+  }
+});
+
+// Download weekly plan (ICS)
+router.get('/plan/:childId/download', async (req, res) => {
+  try {
+    const childId = req.params.childId;
+    const userId = req.session.user.id;
+
+    const { data: child, error: childError } = await req.supabase
+      .from('children')
+      .select('id, name, birth_date, grade, family_id')
+      .eq('id', childId)
+      .single();
+
+    if (childError || !child) {
+      return res.status(404).render('errors/404');
+    }
+
+    const { data: membership, error: membershipError } = await req.supabase
+      .from('family_members')
+      .select('id')
+      .eq('family_id', child.family_id)
+      .eq('user_id', userId)
+      .single();
+
+    if (membershipError || !membership) {
+      req.flash('error', "Vous n'avez pas accès à cet enfant.");
+      return res.redirect('/education');
+    }
+
+    const { data: completions = [] } = await req.supabase
+      .from('activity_completions')
+      .select('activity_id, child_id, completed_at')
+      .eq('user_id', userId)
+      .eq('child_id', childId);
+
+    const [childProfile] = buildChildProfiles([child], completions || []);
+
+    if (!childProfile) {
+      req.flash('error', 'Impossible de générer le plan hebdomadaire.');
+      return res.redirect('/education');
+    }
+
+    const plan = childProfile.weeklyPlan;
+
+    if (!plan) {
+      req.flash('error', 'Plan hebdomadaire indisponible pour le moment.');
+      return res.redirect('/education');
+    }
+
+    const icsPayload = generateWeeklyPlanICS(childProfile, plan, {
+      userEmail: req.session.user.email
+    });
+
+    const safeName = childProfile.child.name
+      .toLowerCase()
+      .replace(/[^\w\-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    res.setHeader('Content-Disposition', `attachment; filename="meloraly-plan-${safeName || childProfile.child.id}.ics"`);
+    res.type('text/calendar');
+    res.send(icsPayload);
+  } catch (error) {
+    console.error('Error generating weekly plan:', error);
+    req.flash('error', 'Impossible de générer le plan hebdomadaire.');
+    res.redirect('/education');
   }
 });
 
