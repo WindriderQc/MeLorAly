@@ -8,9 +8,9 @@
                     <span class="material-symbols-outlined">arrow_back</span>
                     <span class="font-medium">Retour aux familles</span>
                 </a>
-                <button onclick="openSettings()" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 transition flex items-center justify-center">
+                <a href="/family/<%= family.id %>/manage" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 transition flex items-center justify-center">
                     <span class="material-symbols-outlined">settings</span>
-                </button>
+                </a>
             </div>
             
             <div class="flex items-center gap-4">
@@ -108,31 +108,41 @@
                 <div class="bg-white rounded-2xl shadow-sm p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-black text-gray-900">Membres</h3>
-                        <button onclick="inviteMember()" class="text-primary hover:underline text-sm font-bold">
-                            <span class="material-symbols-outlined text-sm align-middle">add</span>
-                            Inviter
-                        </button>
+                        <a href="/family/<%= family.id %>/manage" class="text-primary hover:underline text-sm font-bold">
+                            <span class="material-symbols-outlined text-sm align-middle">settings</span>
+                            Gérer
+                        </a>
                     </div>
 
                     <div class="space-y-3">
-                        <% members.forEach(member => { %>
-                            <div class="flex items-center gap-3">
-                                <% if (member.profiles && member.profiles.avatar_url) { %>
-                                    <img src="<%= member.profiles.avatar_url %>" alt="<%= member.profiles.full_name %>" class="w-10 h-10 rounded-full object-cover">
-                                <% } else { %>
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center text-white font-bold text-sm">
-                                        <%= member.profiles ? member.profiles.full_name.charAt(0) : 'U' %>
+                        <% if (members.length === 0) { %>
+                            <p class="text-gray-500 text-center py-4">Aucun membre pour le moment.</p>
+                        <% } else { %>
+                            <% members.forEach(member => { %>
+                                <div class="flex items-center p-2 rounded-lg">
+                                    <div class="flex items-center space-x-3 flex-1">
+                                        <% if (member.profiles && member.profiles.avatar_url) { %>
+                                            <img src="<%= member.profiles.avatar_url %>" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+                                        <% } else { %>
+                                            <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-gray-900 font-bold">
+                                                <%= member.profiles && member.profiles.full_name ? member.profiles.full_name.charAt(0).toUpperCase() : '?' %>
+                                            </div>
+                                        <% } %>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900 text-sm">
+                                                <%= member.profiles ? member.profiles.full_name : 'Utilisateur inconnu' %>
+                                            </h4>
+                                            <p class="text-xs text-gray-600">
+                                                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
+                                                    <%= member.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700' %>">
+                                                    <%= member.role === 'admin' ? 'Administrateur' : 'Membre' %>
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
-                                <% } %>
-                                <div class="flex-1">
-                                    <p class="font-bold text-sm text-gray-900"><%= member.profiles ? member.profiles.full_name : 'Utilisateur' %></p>
-                                    <p class="text-xs text-gray-600 capitalize"><%= member.role %></p>
                                 </div>
-                                <% if (member.role === 'admin') { %>
-                                    <span class="material-symbols-outlined text-yellow-500 text-sm">shield</span>
-                                <% } %>
-                            </div>
-                        <% }); %>
+                            <% }); %>
+                        <% } %>
                     </div>
                 </div>
 
@@ -160,10 +170,6 @@
 </div>
 
 <script>
-function openSettings() {
-    window.location.href = '/family/<%= family.id %>/manage';
-}
-
 function addChild() {
     alert('Ajouter un enfant - À venir!');
 }
