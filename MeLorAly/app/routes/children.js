@@ -41,6 +41,8 @@ function calculateAge(birthDate) {
 }
 
 async function loadChildForUser(req, childId) {
+  console.log('[CHILDREN] Loading child:', childId);
+  
   const { data: child, error } = await req.supabase
     .from('children')
     .select(`
@@ -61,11 +63,17 @@ async function loadChildForUser(req, childId) {
     .eq('id', childId)
     .single();
 
+  if (error) {
+    console.error('[CHILDREN] Error fetching child:', error);
+  }
+  
   if (error || !child) {
     const err = new Error('Enfant introuvable');
     err.status = 404;
     throw err;
   }
+
+  console.log('[CHILDREN] Child found:', child.name, 'family:', child.family_id);
 
   const { data: membership, error: membershipError } = await req.supabase
     .from('family_members')
@@ -74,11 +82,17 @@ async function loadChildForUser(req, childId) {
     .eq('user_id', req.session.user.id)
     .single();
 
+  if (membershipError) {
+    console.error('[CHILDREN] Membership error:', membershipError);
+  }
+
   if (membershipError || !membership) {
     const err = new Error('Accès non autorisé');
     err.status = 403;
     throw err;
   }
+
+  console.log('[CHILDREN] User has role:', membership.role);
 
   const formattedChild = {
     ...child,
