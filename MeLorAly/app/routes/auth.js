@@ -42,7 +42,13 @@ router.get('/callback', async (req, res) => {
       if (data.user) {
         req.session.user = data.user;
         req.flash('success', 'Email vérifié avec succès! Bienvenue sur MeLorAly.');
-        return res.redirect('/dashboard');
+        // Save session before redirecting
+        return req.session.save((err) => {
+          if (err) {
+            console.error('Session save error:', err);
+          }
+          res.redirect('/dashboard');
+        });
       }
     } catch (error) {
       console.error('Callback error:', error);
@@ -74,7 +80,13 @@ router.post('/login', async (req, res) => {
     req.session.user = data.user;
     req.flash('success', 'Connexion réussie!');
     
-    res.redirect('/dashboard');
+    // Save session before redirecting to avoid loop
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+      }
+      res.redirect('/dashboard');
+    });
   } catch (error) {
     console.error('Login error:', error);
     req.flash('error', 'Une erreur est survenue lors de la connexion.');
