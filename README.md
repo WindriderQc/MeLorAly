@@ -359,8 +359,22 @@ npm run test:verbose
 
 This is a collaborative multi-agent development project. Contributions welcome!
 
+**See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.**
+
 ### Development Workflow
 1. Create feature branch from `main`
+2. Make changes and add tests
+3. Ensure all tests pass (`npm test`)
+4. Submit pull request
+5. Code review
+6. Merge to `main`
+
+### Code Style
+- Use ES6+ features
+- Async/await for database queries
+- Descriptive variable names
+- Comments for complex logic
+- Follow existing patterns
 2. Make changes
 3. Test locally
 4. Submit pull request
@@ -378,7 +392,7 @@ This is a collaborative multi-agent development project. Contributions welcome!
 
 ## 📝 License
 
-[Add your license here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -399,15 +413,18 @@ Multi-agent collaborative development:
 - [x] Family management
 - [x] Children profiles
 - [x] Design system
+- [x] Educational resources
+- [x] Notifications system
+- [x] Test suite (38 tests)
 
-### Phase 2: Features (In Progress)
-- [ ] Messaging system (backend ready, UI needed)
-- [ ] Educational resources hub
-- [ ] Activity tracking
-- [ ] Progress reports
-- [ ] Notifications system
+### Phase 2: Enhancements (In Progress)
+- [ ] Password reset functionality
+- [ ] Email verification
+- [ ] Full messaging system (backend ready)
+- [ ] Social login (Google, Apple, Facebook)
+- [ ] Mobile responsive improvements
 
-### Phase 3: Advanced
+### Phase 3: Advanced Features
 - [ ] Mobile app (React Native)
 - [ ] Real-time chat (WebSockets)
 - [ ] File sharing
@@ -415,12 +432,14 @@ Multi-agent collaborative development:
 - [ ] Achievement badges
 - [ ] Analytics dashboard
 
-### Phase 4: Scale
+### Phase 4: Scale & Optimize
 - [ ] Multi-language support
 - [ ] Email notifications
 - [ ] Push notifications
 - [ ] Advanced permissions
 - [ ] API for third-party integrations
+- [ ] Performance optimization
+- [ ] Redis session store
 
 ---
 
@@ -428,6 +447,7 @@ Multi-agent collaborative development:
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/WindriderQc/MeLorAly/issues)
 - **Documentation**: See `/docs` folder
+- **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md)
 - **FAQ**: Visit `/faq` on running app
 
 ---
@@ -439,6 +459,7 @@ Built with ❤️ using:
 - [Supabase](https://supabase.com/)
 - [Bootstrap](https://getbootstrap.com/)
 - [Material Symbols](https://fonts.google.com/icons)
+- [EJS](https://ejs.co/)
 
 ---
 
