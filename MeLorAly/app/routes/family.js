@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const { requireAuth } = require('../middleware/auth');
 
 // All family routes require authentication
@@ -196,6 +197,212 @@ router.post('/create', async (req, res) => {
     req.flash('error', `Erreur lors de la création de la famille: ${error.message}`);
     res.redirect('/family/create');
   }
+});
+
+// Invite a new member
+router.post('/:id/invite', [
+    body('email').isEmail().withMessage('Veuillez fournir une adresse e-mail valide.'),
+    body('role').isIn(['admin', 'member']).withMessage('Le rôle doit être "admin" ou "member".')
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const familyId = req.params.id;
+        const { email, role } = req.body;
+        const inviterId = req.session.user.id;
+
+        // Check if user is an admin
+        const { data: membership } = await req.supabase
+            .from('family_members')
+            .select('role')
+            .eq('family_id', familyId)
+            .eq('user_id', inviterId)
+            .single();
+
+        if (!membership || membership.role !== 'admin') {
+            return res.status(403).json({ error: 'Vous devez être administrateur pour inviter des membres.' });
+        }
+
+        // Check if user is already a member
+        const { data: existingUser } = await req.supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .single();
+
+        if (existingUser) {
+            const { data: isMember } = await req.supabase
+                .from('family_members')
+                .select('id')
+                .eq('family_id', familyId)
+                .eq('user_id', existingUser.id)
+                .single();
+
+            if (isMember) {
+                return res.status(400).json({ error: 'Cet utilisateur est déjà membre de la famille.' });
+            }
+        }
+
+        // Create invitation
+        const { data: invitation, error } = await req.supabase
+            .from('invitations')
+            .insert({
+                family_id: familyId,
+                invited_by: inviterId,
+                invitee_email: email,
+                role: role,
+                status: 'pending'
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.status(201).json(invitation);
+    } catch (error) {
+        console.error('Invitation error:', error);
+        res.status(500).json({ error: "Erreur lors de l'envoi de l'invitation." });
+    }
+});
+
+// Remove a family member
+router.delete('/:id/member/:memberId', async (req, res) => {
+    try {
+        const { id: familyId, memberId } = req.params;
+        const currentUserId = req.session.user.id;
+
+        // Check if user is an admin
+        const { data: membership } = await req.supabase
+            .from('family_members')
+            .select('role')
+            .eq('family_id', familyId)
+            .eq('user_id', currentUserId)
+            .single();
+
+        if (!membership || membership.role !== 'admin') {
+            return res.status(403).json({ error: 'Vous devez être administrateur pour supprimer des membres.' });
+        }
+
+        // Prevent admin from removing themselves if they are the last admin
+        if (currentUserId === memberId) {
+            const { data: admins } = await req.supabase
+                .from('family_members')
+                .select('user_id')
+                .eq('family_id', familyId)
+                .eq('role', 'admin');
+
+            if (admins && admins.length === 1) {
+                return res.status(400).json({ error: 'Vous ne pouvez pas vous supprimer car vous êtes le dernier administrateur.' });
+            }
+        }
+
+
+        const { error } = await req.supabase
+            .from('family_members')
+            .delete()
+            .eq('family_id', familyId)
+            .eq('user_id', memberId);
+
+        if (error) throw error;
+
+        res.status(200).json({ message: 'Membre supprimé avec succès.' });
+    } catch (error) {
+        console.error('Remove member error:', error);
+        res.status(500).json({ error: 'Erreur lors de la suppression du membre.' });
+    }
+});
+
+// Update a member's role
+router.patch('/:id/member/:memberId/role', [
+    body('role').isIn(['admin', 'member']).withMessage('Le rôle doit être "admin" ou "member".')
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { id: familyId, memberId } = req.params;
+        const { role } = req.body;
+        const currentUserId = req.session.user.id;
+
+        // Check if user is an admin
+        const { data: membership } = await req.supabase
+            .from('family_members')
+            .select('role')
+            .eq('family_id', familyId)
+            .eq('user_id', currentUserId)
+            .single();
+
+        if (!membership || membership.role !== 'admin') {
+            return res.status(403).json({ error: 'Vous devez être administrateur pour modifier les rôles.' });
+        }
+
+        // Prevent admin from demoting themselves if they are the last admin
+        if (currentUserId === memberId && role === 'member') {
+            const { data: admins } = await req.supabase
+                .from('family_members')
+                .select('user_id')
+                .eq('family_id', familyId)
+                .eq('role', 'admin');
+
+            if (admins && admins.length === 1) {
+                return res.status(400).json({ error: 'Vous ne pouvez pas vous rétrograder car vous êtes le dernier administrateur.' });
+            }
+        }
+
+
+        const { data, error } = await req.supabase
+            .from('family_members')
+            .update({ role })
+            .eq('family_id', familyId)
+            .eq('user_id', memberId)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        res.status(200).json(data);
+    } catch (error) {
+        console.error('Update role error:', error);
+        res.status(500).json({ error: 'Erreur lors de la mise à jour du rôle.' });
+    }
+});
+
+// Cancel an invitation
+router.delete('/:id/invitation/:invitationId', async (req, res) => {
+    try {
+        const { id: familyId, invitationId } = req.params;
+        const currentUserId = req.session.user.id;
+
+        // Check if user is an admin
+        const { data: membership } = await req.supabase
+            .from('family_members')
+            .select('role')
+            .eq('family_id', familyId)
+            .eq('user_id', currentUserId)
+            .single();
+
+        if (!membership || membership.role !== 'admin') {
+            return res.status(403).json({ error: 'Vous devez être administrateur pour annuler les invitations.' });
+        }
+
+        const { error } = await req.supabase
+            .from('invitations')
+            .delete()
+            .eq('id', invitationId)
+            .eq('family_id', familyId);
+
+        if (error) throw error;
+
+        res.status(200).json({ message: 'Invitation annulée avec succès.' });
+    } catch (error) {
+        console.error('Cancel invitation error:', error);
+        res.status(500).json({ error: "Erreur lors de l'annulation de l'invitation." });
+    }
 });
 
 module.exports = router;
