@@ -66,12 +66,12 @@ router.get('/:id/manage', async (req, res) => {
       return res.redirect(`/family/${familyId}`);
     }
 
-    // Get family members
+    // Get family members with profiles
     const { data: members } = await req.supabase
       .from('family_members')
       .select(`
         *,
-        profiles:user_id (
+        profiles!family_members_user_id_fkey (
           id,
           full_name,
           avatar_url,
@@ -120,12 +120,12 @@ router.get('/:id', async (req, res) => {
 
     if (familyError) throw familyError;
 
-    // Get family members
+    // Get family members with profiles
     const { data: members, error: membersError } = await req.supabase
       .from('family_members')
       .select(`
         *,
-        profiles:user_id (
+        profiles!family_members_user_id_fkey (
           id,
           full_name,
           avatar_url,
@@ -202,7 +202,7 @@ router.post('/create', async (req, res) => {
 // Invite a new member
 router.post('/:id/invite', [
     body('email').isEmail().withMessage('Veuillez fournir une adresse e-mail valide.'),
-    body('role').isIn(['admin', 'member']).withMessage('Le rôle doit être "admin" ou "member".')
+    body('role').isIn(['member', 'grandparent']).withMessage('Le rôle doit être "member" ou "grandparent".')
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -252,7 +252,7 @@ router.post('/:id/invite', [
             .insert({
                 family_id: familyId,
                 invited_by: inviterId,
-                invitee_email: email,
+                email: email,
                 role: role,
                 status: 'pending'
             })
@@ -317,7 +317,7 @@ router.delete('/:id/member/:memberId', async (req, res) => {
 
 // Update a member's role
 router.patch('/:id/member/:memberId/role', [
-    body('role').isIn(['admin', 'member']).withMessage('Le rôle doit être "admin" ou "member".')
+    body('role').isIn(['admin', 'member', 'grandparent']).withMessage('Le rôle doit être "admin", "member" ou "grandparent".')
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
