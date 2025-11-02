@@ -67,6 +67,8 @@ router.get('/callback', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   
+  console.log('[LOGIN] Attempt for:', email);
+  
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -74,25 +76,31 @@ router.post('/login', async (req, res) => {
     });
 
     if (error) {
+      console.log('[LOGIN] Supabase auth error:', error.message);
       req.flash('error', 'Email ou mot de passe incorrect.');
       return res.redirect('/auth/login');
     }
 
+    console.log('[LOGIN] Auth successful for user:', data.user.id);
+    
     // Store user in session
     req.session.user = data.user;
     req.flash('success', 'Connexion réussie!');
     
+    console.log('[LOGIN] Saving session...');
+    
     // Save session before redirecting to avoid loop
     req.session.save((err) => {
       if (err) {
-        console.error('Session save error:', err);
+        console.error('[LOGIN] Session save error:', err);
         req.flash('error', 'Erreur de session. Veuillez réessayer.');
         return res.redirect('/auth/login');
       }
+      console.log('[LOGIN] Session saved successfully, redirecting to dashboard');
       res.redirect('/dashboard');
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('[LOGIN] Catch error:', error);
     req.flash('error', 'Une erreur est survenue lors de la connexion.');
     res.redirect('/auth/login');
   }

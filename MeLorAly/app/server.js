@@ -64,17 +64,20 @@ const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'your-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
+  name: 'meloraly.sid', // Custom session cookie name
   cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     httpOnly: true, // Prevent XSS attacks
     sameSite: 'lax', // CSRF protection, works with redirects
     secure: false, // Default for development
+    path: '/', // Ensure cookie is sent on all paths
   }
 };
 
 // Production-specific cookie settings
 if (process.env.NODE_ENV === 'production') {
   sessionConfig.cookie.secure = true; // Require HTTPS
+  // Don't set domain - let it default to current host
   // Keep sameSite as 'lax' to allow POST redirects
 }
 
