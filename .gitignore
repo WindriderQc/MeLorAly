@@ -1,5 +1,8 @@
 # MeLorAly - Git Ignore File
 
+# Archive (old docs and prototypes)
+archive/
+
 # Backups
 *.zip
 *_BACKUP_*
@@ -21,15 +24,18 @@ desktop.ini
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
-# Dependencies (when we start development)
+# Dependencies
 node_modules/
 .pnp
 .pnp.js
+package-lock.json
 
 # Testing
 coverage/
 .nyc_output
+.jest/
 
 # Production builds
 .next/
@@ -37,17 +43,30 @@ out/
 build/
 dist/
 
-# Environment variables
+# Environment variables (NEVER commit these)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 
 # Temporary files
 *.tmp
 *.temp
 .cache/
+
+# Uploads (if storing locally)
+uploads/
+public/uploads/
+
+# Database dumps
+*.sql.gz
+*.dump
+
+# Misc
+.eslintcache
+.npmrc
 
 # macOS
 .AppleDouble
