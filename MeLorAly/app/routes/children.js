@@ -101,7 +101,7 @@ function mapValidationErrors(errors) {
   }, {});
 }
 
-const editValidators = [
+const childValidators = [
   body('name')
     .trim()
     .notEmpty().withMessage('Le nom est obligatoire.')
@@ -111,8 +111,119 @@ const editValidators = [
     .isISO8601().withMessage('La date de naissance est invalide.'),
   body('grade')
     .optional({ values: 'falsy' })
-    .isLength({ max: 100 }).withMessage('Le niveau scolaire est trop long.')
+    .isLength({ max: 100 }).withMessage('Le niveau scolaire est trop long.'),
+  body('family_id')
+    .notEmpty().withMessage('La famille est obligatoire.')
+    .isUUID().withMessage('ID de famille invalide.')
 ];
+
+const editValidators = childValidators.slice(0, 3); // Exclude family_id for edit
+
+// Create child - GET form
+router.get('/create', async (req, res) => {
+  try {
+    const familyId = req.query.family_id;
+    
+    if (!familyId) {
+      req.flash('error', 'Famille non spécifiée.');
+      return res.redirect('/dashboard');
+    }
+
+    // Verify user is member of this family
+    const { data: membership } = await req.supabase
+      .from('family_members')
+      .select('role')
+      .eq('family_id', familyId)
+      .eq('user_id', req.session.user.id)
+      .single();
+
+    if (!membership) {
+      req.flash('error', "Vous n'êtes pas membre de cette famille.");
+      return res.redirect('/dashboard');
+    }
+
+    // Get family name
+    const { data: family } = await req.supabase
+      .from('families')
+      .select('name')
+      .eq('id', familyId)
+      .single();
+
+    res.render('children/create', {
+      title: 'Ajouter un enfant',
+      familyId,
+      familyName: family?.name || 'Famille',
+      errors: {},
+      formValues: {
+        name: '',
+        birth_date: '',
+        grade: ''
+      }
+    });
+  } catch (error) {
+    console.error('[CHILDREN] Error loading create form:', error);
+    req.flash('error', "Erreur lors du chargement du formulaire.");
+    res.redirect('/dashboard');
+  }
+});
+
+// Create child - POST
+router.post('/create', childValidators, async (req, res) => {
+  const errors = validationResult(req);
+  
+  if (!errors.isEmpty()) {
+    const { family_id, name, birth_date, grade } = req.body;
+    return res.render('children/create', {
+      title: 'Ajouter un enfant',
+      familyId: family_id,
+      familyName: 'Famille',
+      errors: mapValidationErrors(errors),
+      formValues: { name, birth_date, grade }
+    });
+  }
+
+  try {
+    const { family_id, name, birth_date, grade } = req.body;
+
+    // Verify user is member of this family
+    const { data: membership } = await req.supabase
+      .from('family_members')
+      .select('role')
+      .eq('family_id', family_id)
+      .eq('user_id', req.session.user.id)
+      .single();
+
+    if (!membership) {
+      req.flash('error', "Vous n'êtes pas membre de cette famille.");
+      return res.redirect('/dashboard');
+    }
+
+    // Create the child
+    const { data: child, error } = await req.supabase
+      .from('children')
+      .insert({
+        family_id,
+        name: name.trim(),
+        birth_date: birth_date || null,
+        grade: grade?.trim() || null,
+        created_by: req.session.user.id
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[CHILDREN] Error creating child:', error);
+      throw error;
+    }
+
+    req.flash('success', `${child.name} a été ajouté avec succès!`);
+    res.redirect(`/family/${family_id}`);
+  } catch (error) {
+    console.error('[CHILDREN] Error creating child:', error);
+    req.flash('error', "Erreur lors de la création de l'enfant.");
+    res.redirect('/dashboard');
+  }
+});
 
 router.get('/:childId', async (req, res) => {
   try {

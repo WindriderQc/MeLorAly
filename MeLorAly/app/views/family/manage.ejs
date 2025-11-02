@@ -144,12 +144,12 @@
         <div class="bg-white rounded-2xl shadow-lg p-6">
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-900">Enfants (<%= children.length %>)</h2>
-            <button 
-              onclick="showAddChildModal()"
-              class="bg-primary text-gray-900 px-4 py-2 rounded-xl font-semibold hover:bg-orange-600 transition-colors"
+            <a
+              href="/children/create?family_id=<%= family.id %>"
+              class="bg-primary text-gray-900 px-4 py-2 rounded-xl font-semibold hover:bg-orange-600 transition-colors inline-block"
             >
               + Ajouter un enfant
-            </button>
+            </a>
           </div>
 
           <!-- Children Grid -->

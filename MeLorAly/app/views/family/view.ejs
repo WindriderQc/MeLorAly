@@ -154,10 +154,10 @@
                             <span class="material-symbols-outlined text-primary">chat</span>
                             <span class="font-medium text-gray-900">Messages</span>
                         </a>
-                        <button onclick="addChild()" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition text-left">
+                        <a href="/children/create?family_id=<%= family.id %>" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition text-left">
                             <span class="material-symbols-outlined text-primary">child_care</span>
                             <span class="font-medium text-gray-900">Ajouter un enfant</span>
-                        </button>
+                        </a>
                         <button onclick="inviteMember()" class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition text-left">
                             <span class="material-symbols-outlined text-primary">person_add</span>
                             <span class="font-medium text-gray-900">Inviter un membre</span>
@@ -170,10 +170,6 @@
 </div>
 
 <script>
-function addChild() {
-    alert('Ajouter un enfant - À venir!');
-}
-
 function inviteMember() {
     alert('Inviter un membre - À venir!');
 }
