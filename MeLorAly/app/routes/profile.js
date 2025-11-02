@@ -5,6 +5,11 @@ const { requireAuth } = require('../middleware/auth');
 // All profile routes require authentication
 router.use(requireAuth);
 
+// Profile main page - redirect to edit
+router.get('/', (req, res) => {
+    res.redirect('/profile/edit');
+});
+
 // Profile edit page
 router.get('/edit', async (req, res) => {
     try {
