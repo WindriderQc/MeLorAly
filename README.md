@@ -42,6 +42,19 @@ MeLorAly connects parents, children, and grandparents in a collaborative educati
 - Delete profiles (admin only)
 - Avatar upload (5MB limit, image files only)
 
+### ✅ Ressources éducatives interactives
+- Catalogue structuré par tranche d'âge et thématique
+- Fiches activité détaillées (objectifs, matériel, étapes, astuces)
+- Filtre d'âge instantané directement dans l'interface
+- Suivi des complétions par enfant (journalisé dans Supabase)
+- Comptabilisation automatique du temps d'apprentissage
+
+### ✅ Centre de notifications
+- Panneau latéral interactif depuis la barre de navigation
+- Récupération dynamique des 10 dernières notifications
+- Lecture individuelle ou globale (CSRF protégé)
+- Indicateur d'activités non lues synchronisé en temps réel
+
 ### ✅ Design System
 - 40+ CSS variables (WCAG AA compliant)
 - Bootstrap 5 integration
@@ -74,6 +87,8 @@ MeLorAly connects parents, children, and grandparents in a collaborative educati
 - Input sanitization
 - Permission-based access control
 - SQL injection protection (Supabase)
+- Adaptive rate limiting (global + auth entry points)
+- Admin-protected Supabase service key usage for critical flows
 
 ---
 
@@ -106,8 +121,16 @@ Edit `.env` with your Supabase credentials:
 ```env
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_KEY=your_supabase_service_role_key
 SESSION_SECRET=your_secure_random_string
 PORT=3012
+# Optional SMTP configuration for support emails
+SMTP_HOST=smtp.yourprovider.com
+SMTP_PORT=587
+SMTP_USER=your_inbox_username
+SMTP_PASSWORD=your_inbox_password
+SMTP_SECURE=false
+SUPPORT_INBOX=contact@yourdomain.com
 ```
 
 4. **Set up database**
@@ -146,12 +169,13 @@ MeLorAly/
 │   │   ├── auth.js          # Login/register/logout
 │   │   ├── children.js      # Children profile CRUD
 │   │   ├── dashboard.js     # Main dashboard
-│   │   ├── education.js     # Educational resources (skeleton)
+│   │   ├── education.js     # Educational resources + progress tracking
 │   │   ├── family.js        # Family management
 │   │   ├── messages.js      # Messaging (skeleton)
 │   │   ├── onboarding.js    # 5-step onboarding
 │   │   ├── profile.js       # User profile
-│   │   └── support.js       # FAQ/Contact
+│   │   ├── notifications.js # JSON API for notification panel
+│   │   └── support.js       # FAQ/Contact (with email + persistence)
 │   ├── views/
 │   │   ├── auth/            # Login/register views
 │   │   ├── children/        # Children profile views

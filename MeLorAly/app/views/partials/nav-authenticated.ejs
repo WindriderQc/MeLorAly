@@ -21,7 +21,7 @@
         
         <button onclick="toggleNotifications()" class="relative text-gray-700 hover:text-primary">
             <span class="material-symbols-outlined text-2xl">notifications</span>
-            <span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+            <span id="notificationDot" class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full hidden"></span>
         </button>
     </div>
 </header>
@@ -100,16 +100,281 @@
     </div>
 </div>
 
+<!-- Notifications Panel -->
+<div id="notificationsOverlay" class="fixed inset-0 bg-black/40 hidden z-40" onclick="toggleNotifications()"></div>
+<div id="notificationsPanel" class="fixed top-20 right-4 w-[22rem] bg-white rounded-3xl shadow-2xl border border-gray-200 z-50 hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div>
+            <h3 class="text-lg font-bold text-gray-900">Notifications</h3>
+            <p class="text-xs text-gray-500">Dernières activités et alertes</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="markAllNotifications" type="button" class="text-xs font-bold text-primary hover:underline">
+                Tout marquer comme lu
+            </button>
+            <button type="button" onclick="toggleNotifications()" class="text-gray-500 hover:text-gray-700">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+        </div>
+    </div>
+    <div id="notificationsList" class="max-h-80 overflow-y-auto">
+        <div class="py-6 text-center text-sm text-gray-500">
+            Chargement des notifications...
+        </div>
+    </div>
+</div>
+
 <script>
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     menu.classList.toggle('hidden');
 }
 
-function toggleNotifications() {
-    // TODO: Implement notifications panel
-    alert('Notifications à venir!');
+const notificationState = {
+    loaded: false,
+    items: [],
+    unreadCount: 0,
+    csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || null
+};
+
+async function toggleNotifications() {
+    const panel = document.getElementById('notificationsPanel');
+    const overlay = document.getElementById('notificationsOverlay');
+    const isHidden = panel.classList.contains('hidden');
+
+    if (isHidden) {
+        panel.classList.remove('hidden');
+        overlay.classList.remove('hidden');
+        await loadNotifications();
+    } else {
+        panel.classList.add('hidden');
+        overlay.classList.add('hidden');
+    }
 }
+
+async function ensureCsrfToken() {
+    if (notificationState.csrfToken) {
+        return notificationState.csrfToken;
+    }
+
+    try {
+        const response = await fetch('/csrf-token', { credentials: 'same-origin' });
+        const result = await response.json();
+        if (result?.csrfToken) {
+            notificationState.csrfToken = result.csrfToken;
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            if (meta) {
+                meta.setAttribute('content', notificationState.csrfToken);
+            }
+        }
+    } catch (error) {
+        console.error('CSRF token fetch failed:', error);
+    }
+
+    return notificationState.csrfToken;
+}
+
+function escapeHtml(value) {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatNotificationDate(value) {
+    try {
+        const date = new Date(value);
+        return new Intl.DateTimeFormat('fr-FR', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+    } catch (error) {
+        return value;
+    }
+}
+
+function notificationVisuals(type) {
+    switch (type) {
+        case 'success':
+            return { icon: 'task_alt', iconClass: 'bg-green-100 text-green-600' };
+        case 'warning':
+            return { icon: 'warning', iconClass: 'bg-yellow-100 text-yellow-600' };
+        case 'alert':
+            return { icon: 'priority_high', iconClass: 'bg-red-100 text-red-600' };
+        default:
+            return { icon: 'notifications', iconClass: 'bg-blue-100 text-blue-600' };
+    }
+}
+
+function renderNotificationItem(notification) {
+    const visuals = notificationVisuals(notification.type);
+    const formattedDate = formatNotificationDate(notification.created_at);
+    const readClass = notification.read ? 'bg-gray-50 border-gray-100' : 'bg-primary/5 border-primary/10';
+
+    return `
+        <div class="px-5 py-4 border-b border-gray-100 last:border-b-0 ${readClass}">
+            <div class="flex items-start gap-3">
+                <span class="w-10 h-10 rounded-full flex items-center justify-center ${visuals.iconClass}">
+                    <span class="material-symbols-outlined text-base">${visuals.icon}</span>
+                </span>
+                <div class="flex-1">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900">${escapeHtml(notification.title || 'Notification')}</p>
+                            ${notification.message ? `<p class="text-sm text-gray-600 mt-1">${escapeHtml(notification.message)}</p>` : ''}
+                        </div>
+                        <span class="text-[11px] text-gray-400 whitespace-nowrap">${formattedDate}</span>
+                    </div>
+                    ${notification.read ? '' : `
+                        <div class="mt-3">
+                            <button type="button" class="text-xs font-bold text-primary hover:underline mark-notification-read" data-notification-id="${notification.id}">
+                                Marquer comme lu
+                            </button>
+                        </div>
+                    `}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function updateNotificationDot() {
+    const dot = document.getElementById('notificationDot');
+    if (!dot) return;
+    dot.classList.toggle('hidden', notificationState.unreadCount === 0);
+}
+
+function renderNotifications() {
+    const container = document.getElementById('notificationsList');
+
+    if (!notificationState.items.length) {
+        container.innerHTML = `
+            <div class="py-10 px-6 text-center text-sm text-gray-500">
+                <span class="material-symbols-outlined text-3xl text-gray-300 mb-2 block">notifications_off</span>
+                <p>Aucune notification pour le moment.</p>
+            </div>
+        `;
+        updateNotificationDot();
+        return;
+    }
+
+    container.innerHTML = notificationState.items.map(renderNotificationItem).join('');
+    updateNotificationDot();
+
+    container.querySelectorAll('.mark-notification-read').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const id = event.currentTarget.dataset.notificationId;
+            await markNotificationRead(id);
+        });
+    });
+}
+
+async function loadNotifications(options = {}) {
+    if (notificationState.loaded && options.silent) {
+        updateNotificationDot();
+        return;
+    }
+
+    const container = document.getElementById('notificationsList');
+    if (!options.silent) {
+        container.innerHTML = '<div class="py-6 text-center text-sm text-gray-500">Chargement des notifications...</div>';
+    }
+
+    try {
+        const response = await fetch('/notifications/latest', { credentials: 'same-origin' });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Erreur lors du chargement des notifications.');
+        }
+
+        notificationState.items = result.notifications || [];
+        notificationState.unreadCount = notificationState.items.filter(item => !item.read).length;
+        notificationState.loaded = true;
+        renderNotifications();
+    } catch (error) {
+        console.error('Notifications error:', error);
+        container.innerHTML = `
+            <div class="py-10 px-6 text-center text-sm text-red-600">
+                Impossible de charger les notifications.
+            </div>
+        `;
+    }
+}
+
+async function markNotificationRead(notificationId) {
+    const token = await ensureCsrfToken();
+    if (!token) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/notifications/${notificationId}/read`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': token
+            },
+            credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Erreur lors de la mise à jour.');
+        }
+
+        notificationState.items = notificationState.items.map(item => {
+            if (item.id === notificationId) {
+                return { ...item, read: true };
+            }
+            return item;
+        });
+
+        notificationState.unreadCount = notificationState.items.filter(item => !item.read).length;
+        renderNotifications();
+    } catch (error) {
+        console.error('Failed to mark notification as read:', error);
+    }
+}
+
+async function markAllNotifications() {
+    const token = await ensureCsrfToken();
+    if (!token) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/notifications/mark-all', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': token
+            },
+            credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Erreur lors de la mise à jour.');
+        }
+
+        notificationState.items = notificationState.items.map(item => ({ ...item, read: true }));
+        notificationState.unreadCount = 0;
+        renderNotifications();
+    } catch (error) {
+        console.error('Failed to mark all notifications:', error);
+    }
+}
+
+document.getElementById('markAllNotifications').addEventListener('click', markAllNotifications);
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadNotifications({ silent: true });
+});
 </script>
 
 <!-- Add bottom padding to main content to account for bottom nav -->

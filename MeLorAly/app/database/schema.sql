@@ -47,6 +47,17 @@ create table public.children (
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Activity completions
+create table public.activity_completions (
+  id uuid default uuid_generate_v4() primary key,
+  activity_id text not null,
+  child_id uuid references public.children(id) on delete cascade not null,
+  family_id uuid references public.families(id) on delete cascade not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  completed_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(activity_id, child_id)
+);
+
 -- Messages table
 create table public.messages (
   id uuid default uuid_generate_v4() primary key,
@@ -88,6 +99,7 @@ alter table public.children enable row level security;
 alter table public.messages enable row level security;
 alter table public.notifications enable row level security;
 alter table public.invitations enable row level security;
+alter table public.activity_completions enable row level security;
 
 -- Profiles: Users can only see and edit their own profile
 create policy "Users can view own profile" on public.profiles
@@ -192,6 +204,37 @@ create policy "Users can view relevant invitations" on public.invitations
       select 1 from public.family_members 
       where family_id = invitations.family_id 
       and user_id = auth.uid() 
+      and role = 'admin'
+    )
+  );
+
+-- Activity completions: Family members can update progress
+create policy "Family members can view activity completions" on public.activity_completions
+  for select using (
+    exists (
+      select 1 from public.family_members
+      where family_id = activity_completions.family_id
+      and user_id = auth.uid()
+    )
+  );
+
+create policy "Family members can insert activity completions" on public.activity_completions
+  for insert with check (
+    auth.uid() = user_id and
+    exists (
+      select 1 from public.family_members
+      where family_id = activity_completions.family_id
+      and user_id = auth.uid()
+    )
+  );
+
+create policy "Family members can delete activity completions" on public.activity_completions
+  for delete using (
+    auth.uid() = user_id or
+    exists (
+      select 1 from public.family_members
+      where family_id = activity_completions.family_id
+      and user_id = auth.uid()
       and role = 'admin'
     )
   );

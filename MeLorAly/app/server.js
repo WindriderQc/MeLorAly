@@ -113,6 +113,7 @@ const messagesRoutes = require('./routes/messages');
 const educationRoutes = require('./routes/education');
 const profileRoutes = require('./routes/profile');
 const supportRoutes = require('./routes/support');
+const notificationsRoutes = require('./routes/notifications');
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
@@ -120,9 +121,14 @@ app.use('/family', familyRoutes);
 app.use('/children', childrenRoutes);
 app.use('/onboarding', csrfProtection, setCsrfToken, onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
-app.use('/education', educationRoutes);
+app.use('/education', csrfProtection, setCsrfToken, educationRoutes);
 app.use('/profile', profileRoutes);
+app.use('/notifications', csrfProtection, notificationsRoutes);
 app.use('/', supportRoutes);
+
+app.get('/csrf-token', csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 // Public routes
 app.get('/', (req, res) => {
