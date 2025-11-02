@@ -46,6 +46,8 @@ router.get('/callback', async (req, res) => {
         return req.session.save((err) => {
           if (err) {
             console.error('Session save error:', err);
+            req.flash('error', 'Erreur de session. Veuillez réessayer.');
+            return res.redirect('/auth/login');
           }
           res.redirect('/dashboard');
         });
@@ -84,6 +86,8 @@ router.post('/login', async (req, res) => {
     req.session.save((err) => {
       if (err) {
         console.error('Session save error:', err);
+        req.flash('error', 'Erreur de session. Veuillez réessayer.');
+        return res.redirect('/auth/login');
       }
       res.redirect('/dashboard');
     });
