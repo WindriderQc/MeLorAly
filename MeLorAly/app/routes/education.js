@@ -62,21 +62,36 @@ router.get('/', async (req, res) => {
       return sum + (activity?.durationMinutes || 0);
     }, 0);
 
-    const childProfiles = buildChildProfiles(children || [], completions || []);
-    const personalizedRecommendations = compileGlobalRecommendations(childProfiles, 6);
+    let childProfiles = [];
+    let personalizedRecommendations = activities.filter(activity => activity.recommended);
+    let streakSummary = { longest: 0, current: 0 };
+    let defaultAgeFilter = 'all';
+    let weeklyPlans = {};
 
-    const streakSummary = childProfiles.reduce((acc, profile) => {
-      acc.longest = Math.max(acc.longest, profile.metrics.longestStreak);
-      acc.current = Math.max(acc.current, profile.metrics.currentStreak);
-      return acc;
-    }, { longest: 0, current: 0 });
+    try {
+      childProfiles = buildChildProfiles(children || [], completions || []);
+      personalizedRecommendations = compileGlobalRecommendations(childProfiles, 6);
 
-    const defaultAgeFilter = childProfiles[0]?.ageBuckets?.find(bucket => bucket !== 'all') || 'all';
+      streakSummary = childProfiles.reduce((acc, profile) => {
+        acc.longest = Math.max(acc.longest, profile.metrics.longestStreak);
+        acc.current = Math.max(acc.current, profile.metrics.currentStreak);
+        return acc;
+      }, { longest: 0, current: 0 });
 
-    const weeklyPlans = childProfiles.reduce((acc, profile) => {
-      acc[profile.child.id] = profile.weeklyPlan;
-      return acc;
-    }, {});
+      defaultAgeFilter = childProfiles[0]?.ageBuckets?.find(bucket => bucket !== 'all') || 'all';
+
+      weeklyPlans = childProfiles.reduce((acc, profile) => {
+        acc[profile.child.id] = profile.weeklyPlan;
+        return acc;
+      }, {});
+    } catch (plannerError) {
+      console.error('Education planner error:', plannerError);
+      // Fallback: reuse default recommendations, no plans
+      childProfiles = [];
+      weeklyPlans = {};
+      defaultAgeFilter = 'all';
+      streakSummary = { longest: 0, current: 0 };
+    }
 
     res.render('education/index', {
       title: 'Ressources éducatives - MeLorAly',
