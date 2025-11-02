@@ -1,5 +1,12 @@
 const express = require('express');
+const { createClient } = require('@supabase/supabase-js');
+const emailService = require('../services/email');
 const router = express.Router();
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY
+);
 
 // FAQ page (public access)
 router.get('/faq', (req, res) => {
@@ -18,7 +25,10 @@ router.get('/contact', (req, res) => {
 // Handle contact form submission
 router.post('/contact/send', async (req, res) => {
     try {
-        const { name, email, subject, message } = req.body;
+        const name = req.body.name?.trim();
+        const email = req.body.email?.trim();
+        const subject = req.body.subject?.trim();
+        const message = req.body.message?.trim();
 
         // Validate required fields
         if (!name || !email || !subject || !message) {
@@ -26,40 +36,31 @@ router.post('/contact/send', async (req, res) => {
             return res.redirect('/contact');
         }
 
-        // TODO: Implement email sending
-        // Options:
-        // 1. Use Supabase Edge Functions
-        // 2. Use a service like SendGrid, Mailgun, etc.
-        // 3. Store in database and process async
-        
-        // For now, just log the contact request
-        console.log('Contact form submission:', {
-            name,
-            email,
-            subject,
-            message,
-            timestamp: new Date().toISOString()
-        });
+        const userId = req.session?.user?.id || null;
 
-        // Store in database if user is authenticated
-        if (req.user) {
-            const { error } = await req.supabase
-                .from('contact_requests')
-                .insert({
-                    user_id: req.user.id,
-                    name,
-                    email,
-                    subject,
-                    message,
-                    status: 'pending'
-                });
+        const { error: storeError } = await supabaseAdmin
+            .from('contact_requests')
+            .insert({
+                user_id: userId,
+                name,
+                email,
+                subject,
+                message,
+                status: 'pending'
+            });
 
-            if (error) {
-                console.error('Error storing contact request:', error);
-            }
+        if (storeError) {
+            console.error('Error storing contact request:', storeError);
         }
 
-        req.flash('success', 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.');
+        const emailResult = await emailService.sendSupportEmail({ name, email, subject, message });
+
+        if (!emailResult.sent) {
+            req.flash('success', 'Votre message a été enregistré. Notre équipe vous contactera très bientôt.');
+        } else {
+            req.flash('success', 'Votre message a été envoyé avec succès. Nous vous répondrons rapidement.');
+        }
+
         res.redirect('/contact');
     } catch (error) {
         console.error('Error processing contact form:', error);

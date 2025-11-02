@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const expressLayouts = require('express-ejs-layouts');
 const { createClient } = require('@supabase/supabase-js');
 const csrf = require('csurf');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 
 const app = express();
@@ -25,6 +26,34 @@ app.set('layout', 'layout');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Rate limiting
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 200,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  skip: (req) => req.method === 'GET'
+});
+
+const sensitivePostLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 60,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  skip: (req) => req.method === 'GET'
+});
+
+app.use(generalLimiter);
+app.use('/auth', authLimiter);
+app.use(['/onboarding', '/family', '/children', '/profile'], sensitivePostLimiter);
 
 // Session configuration
 app.use(session({

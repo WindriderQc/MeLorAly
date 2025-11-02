@@ -31,7 +31,7 @@ router.post('/update', async (req, res) => {
                 bio: bio,
                 updated_at: new Date().toISOString()
             })
-            .eq('id', req.user.id)
+            .eq('id', req.session.user.id)
             .select()
             .single();
 
@@ -96,7 +96,7 @@ router.post('/notifications', async (req, res) => {
                 },
                 updated_at: new Date().toISOString()
             })
-            .eq('id', req.user.id);
+            .eq('id', req.session.user.id);
 
         if (error) {
             console.error('Error updating notifications:', error);
@@ -124,7 +124,7 @@ router.post('/privacy', async (req, res) => {
                 visibility: profileVisibility,
                 updated_at: new Date().toISOString()
             })
-            .eq('id', req.user.id);
+            .eq('id', req.session.user.id);
 
         if (error) {
             console.error('Error updating privacy:', error);
@@ -151,14 +151,146 @@ router.post('/delete', async (req, res) => {
             return res.redirect('/profile/edit');
         }
 
-        // TODO: Implement proper account deletion workflow
-        // Should include:
-        // - Removing user from all families
-        // - Deleting associated data
-        // - Soft delete vs hard delete
-        
-        req.flash('error', 'La suppression de compte n\'est pas encore implémentée');
-        res.redirect('/profile/edit');
+        const supabase = req.supabase;
+        const user = req.session.user;
+        const userId = user.id;
+        const userEmail = user.email;
+
+        const familiesToDelete = new Set();
+
+        const { data: memberships, error: membershipsError } = await supabase
+            .from('family_members')
+            .select('family_id, role')
+            .eq('user_id', userId);
+
+        if (membershipsError) {
+            throw membershipsError;
+        }
+
+        if (memberships && memberships.length > 0) {
+            for (const membership of memberships) {
+                if (membership.role !== 'admin') {
+                    continue;
+                }
+
+                const { data: adminMembers, error: adminError } = await supabase
+                    .from('family_members')
+                    .select('user_id')
+                    .eq('family_id', membership.family_id)
+                    .eq('role', 'admin');
+
+                if (adminError) {
+                    throw adminError;
+                }
+
+                if (!adminMembers || adminMembers.length !== 1) {
+                    continue;
+                }
+
+                const { data: otherMembers, error: otherMembersError } = await supabase
+                    .from('family_members')
+                    .select('user_id, role')
+                    .eq('family_id', membership.family_id)
+                    .neq('user_id', userId);
+
+                if (otherMembersError) {
+                    throw otherMembersError;
+                }
+
+                if (!otherMembers || otherMembers.length === 0) {
+                    familiesToDelete.add(membership.family_id);
+                    continue;
+                }
+
+                const existingAdmin = otherMembers.find(member => member.role === 'admin');
+                const nextAdmin = existingAdmin || otherMembers[0];
+
+                const { error: promoteError } = await supabase
+                    .from('family_members')
+                    .update({ role: 'admin' })
+                    .eq('family_id', membership.family_id)
+                    .eq('user_id', nextAdmin.user_id);
+
+                if (promoteError) {
+                    throw promoteError;
+                }
+            }
+        }
+
+        const { error: invitationsByUserError } = await supabase
+            .from('invitations')
+            .delete()
+            .eq('invited_by', userId);
+
+        if (invitationsByUserError) {
+            throw invitationsByUserError;
+        }
+
+        const { error: invitationsByEmailError } = await supabase
+            .from('invitations')
+            .delete()
+            .eq('email', userEmail);
+
+        if (invitationsByEmailError) {
+            throw invitationsByEmailError;
+        }
+
+        const { error: notificationsError } = await supabase
+            .from('notifications')
+            .delete()
+            .eq('user_id', userId);
+
+        if (notificationsError) {
+            throw notificationsError;
+        }
+
+        const { error: contactUpdateError } = await supabase
+            .from('contact_requests')
+            .update({ status: 'closed' })
+            .eq('email', userEmail);
+
+        if (contactUpdateError) {
+            console.warn('Optional contact request cleanup failed:', contactUpdateError);
+        }
+
+        const { error: familyMembershipDeleteError } = await supabase
+            .from('family_members')
+            .delete()
+            .eq('user_id', userId);
+
+        if (familyMembershipDeleteError) {
+            throw familyMembershipDeleteError;
+        }
+
+        if (familiesToDelete.size > 0) {
+            const { error: familyDeleteError } = await supabase
+                .from('families')
+                .delete()
+                .in('id', Array.from(familiesToDelete));
+
+            if (familyDeleteError) {
+                throw familyDeleteError;
+            }
+        }
+
+        const { error: profileDeleteError } = await supabase
+            .from('profiles')
+            .delete()
+            .eq('id', userId);
+
+        if (profileDeleteError) {
+            console.warn('Profile deletion fallback (will continue):', profileDeleteError);
+        }
+
+        const { error: authDeleteError } = await supabase.auth.admin.deleteUser(userId);
+
+        if (authDeleteError) {
+            throw authDeleteError;
+        }
+
+        delete req.session.user;
+        req.flash('success', 'Votre compte a été supprimé. Merci d\'avoir testé MeLorAly.');
+        res.redirect('/auth/login');
     } catch (error) {
         console.error('Error deleting account:', error);
         req.flash('error', 'Une erreur est survenue');
