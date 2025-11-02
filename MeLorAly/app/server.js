@@ -83,6 +83,7 @@ const messagesRoutes = require('./routes/messages');
 const educationRoutes = require('./routes/education');
 const profileRoutes = require('./routes/profile');
 const supportRoutes = require('./routes/support');
+const childrenRoutes = require('./routes/children');
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
@@ -91,6 +92,7 @@ app.use('/onboarding', csrfProtection, setCsrfToken, onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
 app.use('/education', educationRoutes);
 app.use('/profile', profileRoutes);
+app.use('/children', childrenRoutes);
 app.use('/', supportRoutes);
 
 // Public routes
