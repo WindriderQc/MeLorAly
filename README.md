@@ -284,6 +284,39 @@ Never commit `.env` files. Use strong session secrets in production.
 
 ## 🧪 Testing
 
+### Automated Test Suite ✅
+
+**Status:** 38 tests passing  
+**Framework:** Mocha + Chai + Supertest
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test category
+npm run test:auth
+
+# Verbose output
+npm run test:verbose
+```
+
+**Test Coverage:**
+- ✅ Authentication (10 tests)
+- ✅ Dashboard routes (2 tests)
+- ✅ Family management (3 tests)
+- ✅ Children profiles (3 tests)
+- ✅ Education (2 tests)
+- ✅ Onboarding flow (5 tests)
+- ✅ Profile management (4 tests)
+- ✅ Notifications (3 tests)
+- ✅ Support pages (5 tests)
+- ✅ App health (1 test)
+
+**See [MeLorAly/app/test/README.md](MeLorAly/app/test/README.md) for complete testing documentation.**
+
 ### Manual Testing Checklist
 1. **Registration & Login**
    - Create account → Login → Logout
