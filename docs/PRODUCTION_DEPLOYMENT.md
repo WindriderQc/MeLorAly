@@ -20,9 +20,9 @@ On your production server at `nema.meloraly.specialblend.ca`, create a `.env` fi
 
 ```bash
 # Supabase Configuration
-SUPABASE_URL=https://efqksigmnktnbwhzwjes.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmcWtzaWdtbmt0bmJ3aHp3amVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMTA0MTUsImV4cCI6MjA3NzU4NjQxNX0.oqRAiPb06gQoIOxlL7lzxsG1ONnCTH--s9Z2Fb3atho
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmcWtzaWdtbmt0bmJ3aHp3amVzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjAxMDQxNSwiZXhwIjoyMDc3NTg2NDE1fQ.gA6iuWcKXVmYK0VOX13uCjO_zYdbnmC1sNHVwbRZh9w
+SUPABASE_URL=https://xxxxxxxxxx.supabase.co
+SUPABASE_KEY=xxxxxxx
+SUPABASE_SERVICE_KEY=xxxxx
 
 # Session Secret - GENERATE A NEW ONE!
 # Run: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
