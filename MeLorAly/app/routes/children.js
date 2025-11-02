@@ -133,6 +133,55 @@ const childValidators = [
 
 const editValidators = childValidators.slice(0, 3); // Exclude family_id for edit
 
+// Helper for selecting the family before creating a child
+router.get('/add', async (req, res) => {
+  try {
+    const { data: memberships, error } = await req.supabase
+      .from('family_members')
+      .select(`
+        family_id,
+        role,
+        families (
+          id,
+          name,
+          avatar_url
+        )
+      `)
+      .eq('user_id', req.session.user.id);
+
+    if (error) {
+      throw error;
+    }
+
+    if (!memberships || memberships.length === 0) {
+      req.flash('error', 'Créez une famille avant d\'ajouter un enfant.');
+      return res.redirect('/family/create');
+    }
+
+    if (memberships.length === 1) {
+      const family = memberships[0].families || {};
+      const familyId = family.id || memberships[0].family_id;
+      return res.redirect(`/children/create?family_id=${familyId}`);
+    }
+
+    const families = memberships.map((membership) => ({
+      id: membership.families?.id || membership.family_id,
+      name: membership.families?.name || 'Famille',
+      avatarUrl: membership.families?.avatar_url || null,
+      role: membership.role
+    }));
+
+    res.render('children/select-family', {
+      title: 'Ajouter un enfant',
+      families
+    });
+  } catch (error) {
+    console.error('[CHILDREN] Error loading family selection:', error);
+    req.flash('error', 'Erreur lors du chargement des familles.');
+    res.redirect('/dashboard');
+  }
+});
+
 // Create child - GET form
 router.get('/create', async (req, res) => {
   try {

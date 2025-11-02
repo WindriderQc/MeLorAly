@@ -1,0 +1,45 @@
+<div class="min-h-screen pb-24" style="background: var(--color-bg);">
+    <div class="px-6 py-12" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); color: var(--color-on-primary);">
+        <div class="max-w-4xl mx-auto">
+            <a href="/dashboard" class="inline-flex items-center gap-2 text-sm" style="color: rgba(255, 255, 255, 0.8);">
+                <span class="material-symbols-outlined text-base">arrow_back</span>
+                Retour au tableau de bord
+            </a>
+            <h1 class="text-4xl font-black mt-4">Ajouter un enfant</h1>
+            <p class="mt-2 text-sm" style="color: rgba(255, 255, 255, 0.85);">
+                Sélectionnez la famille à laquelle rattacher ce profil enfant.
+            </p>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 -mt-10">
+        <div class="bg-white rounded-2xl shadow-card p-6 space-y-6">
+            <div class="space-y-4">
+                <% families.forEach(family => { %>
+                    <div class="flex items-center justify-between p-5 rounded-xl border" style="border-color: var(--color-border); background: var(--color-surface);">
+                        <div class="flex items-center gap-4">
+                            <% if (family.avatarUrl) { %>
+                                <img src="<%= family.avatarUrl %>" alt="<%= family.name %>" class="w-12 h-12 rounded-full object-cover border" style="border-color: var(--color-border);">
+                            <% } else { %>
+                                <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold" style="background: rgba(0, 0, 0, 0.06); color: var(--color-text);">
+                                    <span class="material-symbols-outlined text-lg">family_restroom</span>
+                                </div>
+                            <% } %>
+                            <div>
+                                <h2 class="text-lg font-semibold" style="color: var(--color-text);"><%= family.name %></h2>
+                                <p class="text-sm" style="color: var(--color-muted);">
+                                    Votre rôle : <strong style="color: var(--color-text);">
+                                        <%= family.role === 'admin' ? 'Administrateur' : family.role === 'grandparent' ? 'Grands-parents' : 'Membre' %>
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+                        <a href="/children/create?family_id=<%= family.id %>" class="px-5 py-3 rounded-full font-semibold shadow-card" style="background: var(--color-primary); color: var(--color-on-primary);">
+                            Continuer
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
