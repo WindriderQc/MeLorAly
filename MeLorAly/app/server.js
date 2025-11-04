@@ -145,9 +145,9 @@ app.use('/family', familyRoutes);
 app.use('/children', childrenRoutes);
 app.use('/onboarding', csrfProtection, setCsrfToken, onboardingRoutes);
 app.use('/messages', requireAuth, messagesRoutes);
-app.use('/education', csrfProtection, setCsrfToken, educationRoutes);
+app.use('/education', educationRoutes);
 app.use('/profile', profileRoutes);
-app.use('/notifications', csrfProtection, notificationsRoutes);
+app.use('/notifications', notificationsRoutes);
 app.use('/', supportRoutes);
 
 app.get('/csrf-token', csrfProtection, (req, res) => {

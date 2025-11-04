@@ -58,6 +58,19 @@ create table public.activity_completions (
   unique(activity_id, child_id)
 );
 
+-- Contact requests table
+create table public.contact_requests (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users(id) on delete cascade,
+  name text not null,
+  email text not null,
+  subject text not null,
+  message text not null,
+  status text check (status in ('pending', 'responded', 'closed')) default 'pending',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- Messages table
 create table public.messages (
   id uuid default uuid_generate_v4() primary key,
@@ -100,6 +113,7 @@ alter table public.messages enable row level security;
 alter table public.notifications enable row level security;
 alter table public.invitations enable row level security;
 alter table public.activity_completions enable row level security;
+alter table public.contact_requests enable row level security;
 
 -- Profiles: Users can only see and edit their own profile
 create policy "Users can view own profile" on public.profiles
@@ -261,6 +275,9 @@ create trigger handle_families_updated_at before update on public.families
 create trigger handle_children_updated_at before update on public.children
   for each row execute function public.handle_updated_at();
 
+create trigger handle_contact_requests_updated_at before update on public.contact_requests
+  for each row execute function public.handle_updated_at();
+
 -- Function to automatically create profile after user signup
 create or replace function public.handle_new_user()
 returns trigger
@@ -278,3 +295,21 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- Contact requests policies
+create policy "Users can view own contact requests" on public.contact_requests
+  for select using (auth.uid() = user_id);
+
+create policy "Anyone can insert contact requests" on public.contact_requests
+  for insert with check (true);
+
+create policy "Users can update own contact requests" on public.contact_requests
+  for update using (auth.uid() = user_id);
+
+-- Indexes for better performance
+create index idx_activity_completions_child_id on public.activity_completions(child_id);
+create index idx_activity_completions_family_id on public.activity_completions(family_id);
+create index idx_activity_completions_user_id on public.activity_completions(user_id);
+
+create index idx_contact_requests_user_id on public.contact_requests(user_id);
+create index idx_contact_requests_status on public.contact_requests(status);
