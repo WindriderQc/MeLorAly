@@ -1,0 +1,131 @@
+<!-- Voice Agent View -->
+<div class="min-h-screen bg-background-light pb-24">
+    <!-- Header -->
+    <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white px-6 py-8 rounded-b-3xl shadow-lg">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-2xl font-black">Assistant Vocal</h1>
+            <p class="text-white/90">Interagissez avec MeLorAly par la voix</p>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 py-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <!-- p5.js Canvas -->
+            <div id="canvas-container" class="w-[480px] h-[480px] mx-auto mb-6 bg-gray-100 rounded-lg"></div>
+
+            <!-- Voice Agent GUI -->
+            <div class="text-center">
+                <button id="mic-btn" class="bg-primary text-gray-900 w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-lg hover:shadow-xl transition">
+                    <span class="material-symbols-outlined text-4xl">mic</span>
+                </button>
+                <p id="status-text" class="mt-4 text-gray-600">Appuyez pour parler</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- p5.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<script>
+  let sketchInstance;
+  let sketch = function(p) {
+    let mic, fft;
+    let isMicOn = false;
+
+    p.setup = function() {
+      let canvas = p.createCanvas(480, 480);
+      canvas.parent('canvas-container');
+      p.noLoop(); // Don't start drawing immediately
+    };
+
+    p.toggleMic = function() {
+      if (isMicOn) {
+        mic.stop();
+        isMicOn = false;
+        p.noLoop();
+        p.background(241, 245, 249); // Clear canvas
+      } else {
+        mic = new p5.AudioIn();
+        mic.start(() => {
+          fft = new p5.FFT();
+          fft.setInput(mic);
+          isMicOn = true;
+          p.loop(); // Start drawing
+        }, () => {
+          console.error('Microphone access denied');
+          // Handle mic access denial in the UI
+        });
+      }
+    };
+
+    p.draw = function() {
+      p.background(241, 245, 249);
+      let spectrum = fft.analyze();
+      p.fill(139, 92, 246);
+      p.noStroke();
+      for (let i = 0; i < spectrum.length; i++) {
+        let x = p.map(i, 0, spectrum.length, 0, p.width);
+        let h = -p.height + p.map(spectrum[i], 0, 255, p.height, 0);
+        p.rect(x, p.height, p.width / spectrum.length, h);
+      }
+    };
+    };
+  };
+
+  sketchInstance = new p5(sketch);
+</script>
+
+<script>
+  const micBtn = document.getElementById('mic-btn');
+  const statusText = document.getElementById('status-text');
+  let isListening = false;
+  let recognition;
+
+  if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'fr-FR';
+
+    recognition.onresult = (event) => {
+      let interimTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          // Final transcript
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+      statusText.textContent = interimTranscript || 'Écoute en cours...';
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      statusText.textContent = 'Erreur de reconnaissance vocale.';
+    };
+  } else {
+    statusText.textContent = 'Reconnaissance vocale non supportée.';
+    micBtn.disabled = true;
+  }
+
+  micBtn.addEventListener('click', () => {
+    isListening = !isListening;
+    if (isListening) {
+      micBtn.classList.add('bg-red-500');
+      micBtn.querySelector('.material-symbols-outlined').textContent = 'mic_off';
+      statusText.textContent = 'Écoute en cours...';
+      sketchInstance.toggleMic();
+      if (recognition) {
+        recognition.start();
+      }
+    } else {
+      micBtn.classList.remove('bg-red-500');
+      micBtn.querySelector('.material-symbols-outlined').textContent = 'mic';
+      statusText.textContent = 'Appuyez pour parler';
+      sketchInstance.toggleMic();
+      if (recognition) {
+        recognition.stop();
+      }
+    }
+  });
+</script>

@@ -138,6 +138,7 @@ const educationRoutes = require('./routes/education');
 const profileRoutes = require('./routes/profile');
 const supportRoutes = require('./routes/support');
 const notificationsRoutes = require('./routes/notifications');
+const voiceRoutes = require('./routes/voice');
 
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
@@ -148,6 +149,7 @@ app.use('/messages', requireAuth, messagesRoutes);
 app.use('/education', educationRoutes);
 app.use('/profile', profileRoutes);
 app.use('/notifications', notificationsRoutes);
+app.use('/voice', voiceRoutes);
 app.use('/', supportRoutes);
 
 app.get('/csrf-token', csrfProtection, (req, res) => {
