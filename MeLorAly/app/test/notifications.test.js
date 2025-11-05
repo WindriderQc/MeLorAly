@@ -16,20 +16,20 @@ describe('Notifications API', () => {
 
   describe('POST /notifications/:id/read', () => {
     it('should reject without CSRF token', (done) => {
-      // CSRF protected routes return 500 without valid token
+      // Unauthenticated requests redirect to login (auth check before CSRF)
       request(app)
         .post('/notifications/123/read')
-        .expect(500) // CSRF error
+        .expect(302) // Redirect to login
         .end(done);
     });
   });
 
   describe('POST /notifications/mark-all', () => {
     it('should reject without CSRF token', (done) => {
-      // CSRF protected routes return 500 without valid token
+      // Unauthenticated requests redirect to login (auth check before CSRF)
       request(app)
         .post('/notifications/mark-all')
-        .expect(500) // CSRF error
+        .expect(302) // Redirect to login
         .end(done);
     });
   });

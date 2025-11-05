@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const csrf = require('csurf');
 const { requireAuth } = require('../middleware/auth');
 const {
   categories,
@@ -16,15 +15,6 @@ const {
   generateWeeklyPlanICS
 } = require('../services/educationPlanner');
 
-// CSRF Protection for POST/PUT/DELETE requests
-const csrfProtection = csrf({ cookie: false });
-
-// Middleware to set CSRF token in locals
-const setCsrfToken = (req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-};
-
 // Pre-computed helpers
 const activitiesByCategory = getActivitiesByCategory();
 const ageFilters = getAgeFilters();
@@ -33,7 +23,7 @@ const ageFilters = getAgeFilters();
 router.use(requireAuth);
 
 // Education resources index page
-router.get('/', csrfProtection, setCsrfToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const userId = req.session.user.id;
 
@@ -129,7 +119,7 @@ router.get('/', csrfProtection, setCsrfToken, async (req, res) => {
 });
 
 // Activity detail page
-router.get('/activity/:id', csrfProtection, setCsrfToken, async (req, res) => {
+router.get('/activity/:id', async (req, res) => {
   try {
     const activity = getActivityById(req.params.id);
 
@@ -171,7 +161,7 @@ router.get('/activity/:id', csrfProtection, setCsrfToken, async (req, res) => {
 });
 
 // Mark activity as complete (API endpoint)
-router.post('/activity/:id/complete', csrfProtection, async (req, res) => {
+router.post('/activity/:id/complete', async (req, res) => {
   try {
     const activityId = req.params.id;
     const { childId, completed = true } = req.body;

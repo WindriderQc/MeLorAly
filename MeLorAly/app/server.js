@@ -140,15 +140,18 @@ const supportRoutes = require('./routes/support');
 const notificationsRoutes = require('./routes/notifications');
 const voiceRoutes = require('./routes/voice');
 
-app.use('/auth', authRoutes);
-app.use('/dashboard', dashboardRoutes);
-app.use('/family', familyRoutes);
-app.use('/children', childrenRoutes);
-app.use('/onboarding', csrfProtection, setCsrfToken, onboardingRoutes);
-app.use('/messages', requireAuth, messagesRoutes);
-app.use('/education', educationRoutes);
-app.use('/profile', profileRoutes);
-app.use('/notifications', notificationsRoutes);
+// Public routes with CSRF protection (login/register forms)
+app.use('/auth', csrfProtection, setCsrfToken, authRoutes);
+
+// Protected routes - Auth BEFORE CSRF (redirect unauthenticated users first)
+app.use('/dashboard', requireAuth, csrfProtection, setCsrfToken, dashboardRoutes);
+app.use('/family', requireAuth, csrfProtection, setCsrfToken, familyRoutes);
+app.use('/children', requireAuth, csrfProtection, setCsrfToken, childrenRoutes);
+app.use('/onboarding', requireAuth, csrfProtection, setCsrfToken, onboardingRoutes);
+app.use('/messages', requireAuth, csrfProtection, setCsrfToken, messagesRoutes);
+app.use('/education', requireAuth, csrfProtection, setCsrfToken, educationRoutes);
+app.use('/profile', requireAuth, csrfProtection, setCsrfToken, profileRoutes);
+app.use('/notifications', requireAuth, csrfProtection, setCsrfToken, notificationsRoutes);
 app.use('/voice', voiceRoutes);
 app.use('/', supportRoutes);
 
@@ -167,6 +170,18 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use((req, res) => {
   res.status(404).render('errors/404');
+});
+
+// CSRF error handler (must be before general error handler)
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    // CSRF token validation failed
+    return res.status(403).json({
+      error: 'Invalid CSRF token',
+      message: 'Form submission validation failed. Please refresh and try again.'
+    });
+  }
+  next(err);
 });
 
 app.use((err, req, res, next) => {
