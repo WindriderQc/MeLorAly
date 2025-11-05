@@ -29,7 +29,7 @@ create table public.family_members (
   id uuid default uuid_generate_v4() primary key,
   family_id uuid references public.families(id) on delete cascade not null,
   user_id uuid references auth.users(id) on delete cascade not null,
-  role text check (role in ('admin', 'member', 'grandparent')) default 'member',
+  role text check (role in ('admin', 'parent', 'grandparent')) default 'parent',
   joined_at timestamp with time zone default timezone('utc'::text, now()) not null,
   unique(family_id, user_id)
 );
@@ -97,7 +97,7 @@ create table public.invitations (
   id uuid default uuid_generate_v4() primary key,
   family_id uuid references public.families(id) on delete cascade not null,
   email text not null,
-  role text check (role in ('member', 'grandparent')) default 'member',
+  role text check (role in ('parent', 'grandparent')) default 'parent',
   invited_by uuid references auth.users(id) on delete cascade not null,
   status text check (status in ('pending', 'accepted', 'expired')) default 'pending',
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,

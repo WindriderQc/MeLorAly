@@ -199,10 +199,60 @@ router.post('/create', async (req, res) => {
   }
 });
 
+// Handle family update
+router.post('/:id/update', [
+    body('family_name').trim().notEmpty().withMessage('Le nom de la famille ne peut pas être vide.'),
+    body('avatar_url').optional({ checkFalsy: true }).isURL().withMessage("L'URL de l'avatar est invalide.")
+], async (req, res) => {
+    const familyId = req.params.id;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        errors.array().forEach(error => req.flash('error', error.msg));
+        return res.redirect(`/family/${familyId}/manage`);
+    }
+
+    try {
+        const { family_name, avatar_url } = req.body;
+        const userId = req.session.user.id;
+
+        // Check if user is an admin
+        const { data: membership, error: membershipError } = await req.supabase
+            .from('family_members')
+            .select('role')
+            .eq('family_id', familyId)
+            .eq('user_id', userId)
+            .single();
+
+        if (membershipError || !membership || membership.role !== 'admin') {
+            req.flash('error', 'Vous devez être administrateur pour modifier cette famille.');
+            return res.redirect(`/family/${familyId}`);
+        }
+
+        // Update the family
+        const { error: updateError } = await req.supabase
+            .from('families')
+            .update({
+                name: family_name,
+                avatar_url: avatar_url,
+                updated_at: new Date()
+            })
+            .eq('id', familyId);
+
+        if (updateError) throw updateError;
+
+        req.flash('success', 'Famille mise à jour avec succès !');
+        res.redirect(`/family/${familyId}/manage`);
+    } catch (error) {
+        console.error('Family update error:', error);
+        req.flash('error', 'Erreur lors de la mise à jour de la famille.');
+        res.redirect(`/family/${familyId}/manage`);
+    }
+});
+
 // Invite a new member
 router.post('/:id/invite', [
     body('email').isEmail().withMessage('Veuillez fournir une adresse e-mail valide.'),
-    body('role').isIn(['member', 'grandparent']).withMessage('Le rôle doit être "member" ou "grandparent".')
+    body('role').isIn(['parent', 'grandparent']).withMessage('Le rôle doit être "parent" ou "grandparent".')
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -317,7 +367,7 @@ router.delete('/:id/member/:memberId', async (req, res) => {
 
 // Update a member's role
 router.patch('/:id/member/:memberId/role', [
-    body('role').isIn(['admin', 'member', 'grandparent']).withMessage('Le rôle doit être "admin", "member" ou "grandparent".')
+    body('role').isIn(['admin', 'parent', 'grandparent']).withMessage('Le rôle doit être "admin", "parent" ou "grandparent".')
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -342,7 +392,7 @@ router.patch('/:id/member/:memberId/role', [
         }
 
         // Prevent admin from demoting themselves if they are the last admin
-        if (currentUserId === memberId && role === 'member') {
+        if (currentUserId === memberId && role === 'parent') {
             const { data: admins } = await req.supabase
                 .from('family_members')
                 .select('user_id')
@@ -369,6 +419,40 @@ router.patch('/:id/member/:memberId/role', [
     } catch (error) {
         console.error('Update role error:', error);
         res.status(500).json({ error: 'Erreur lors de la mise à jour du rôle.' });
+    }
+});
+
+// Delete a family
+router.delete('/:id', async (req, res) => {
+    try {
+        const familyId = req.params.id;
+        const userId = req.session.user.id;
+
+        // Check if user is an admin
+        const { data: membership, error: membershipError } = await req.supabase
+            .from('family_members')
+            .select('role')
+            .eq('family_id', familyId)
+            .eq('user_id', userId)
+            .single();
+
+        if (membershipError || !membership || membership.role !== 'admin') {
+            return res.status(403).json({ error: 'Vous devez être administrateur pour supprimer cette famille.' });
+        }
+
+        // Delete the family
+        const { error: deleteError } = await req.supabase
+            .from('families')
+            .delete()
+            .eq('id', familyId);
+
+        if (deleteError) throw deleteError;
+
+        req.flash('success', 'Famille supprimée avec succès.');
+        res.status(200).json({ message: 'Famille supprimée avec succès.', redirect: '/family' });
+    } catch (error) {
+        console.error('Family delete error:', error);
+        res.status(500).json({ error: 'Erreur lors de la suppression de la famille.' });
     }
 });
 
